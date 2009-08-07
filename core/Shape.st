@@ -1,4 +1,4 @@
-{ import: st80 }
+{ import: FloatLib }
 
 Shape : Object ( objectToWorld reverseOrientation )
 

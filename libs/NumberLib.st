@@ -47,3 +47,9 @@ Number divToPoint: aPoint
             y: aPoint y / self;
             z: aPoint z / self
 ]
+
+Number clampMin: min max: max
+[
+    self > max ifTrue: [ ^max ].
+    self < min ifTrue: [ ^min ]
+]

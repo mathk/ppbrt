@@ -86,6 +86,17 @@ Float cos
     }
 ]
 
+Float acos
+[
+    self := self copy.
+    {
+        double d;
+        memcpy(&d v_self, sizeof(double));
+        d = acos(d);
+        memcpy(v_self, $d, sizeof(double));
+    }
+]
+
 Number deg
 [
     ^Degree value: self
