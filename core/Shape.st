@@ -11,3 +11,18 @@ Shape worldBbox
 [
     ^objectToWorld apply: self bbox
 ]
+
+"
+Tell wether a ray can intersect the shape.
+This is usefull for shape that need to be refine
+befor computing intersect
+"
+Shape canIntersect
+[
+    ^true
+]
+
+Shape refine
+[
+    self subclassResponsibility: 'Use to refine object'
+]
