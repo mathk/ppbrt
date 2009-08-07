@@ -91,9 +91,9 @@ Float acos
     self := self copy.
     {
         double d;
-        memcpy(&d v_self, sizeof(double));
+        memcpy(&d, v_self, sizeof(double));
         d = acos(d);
-        memcpy(v_self, $d, sizeof(double));
+        memcpy(v_self, &d, sizeof(double));
     }
 ]
 

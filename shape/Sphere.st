@@ -1,13 +1,13 @@
 { import: Shape }
 { import: BBox }
 
-Shpere : Shape ( thetaMin thetaMax phiMax radius zmin zmax )
+Sphere : Shape ( thetaMin thetaMax phiMax radius zmin zmax )
 
-Shpere toWorld: o2w orientation: ro radius: r
+Sphere toWorld: o2w orientation: ro radius: r
        minz: minz maxz: maxz maxphi: maxphi
 [
     self := self new.
-    radious := r.
+    radius := r.
     objectToWorld := o2w.
     reverseOrientation := ro.
     zmin := minz clampMin: radius negated max: radius.
@@ -20,6 +20,6 @@ Shpere toWorld: o2w orientation: ro radius: r
 
 Sphere bbox
 [
-    ^BBox pMin: (Point x: radius negated y: radius negated z: zmin.
+    ^BBox pMin: (Point x: radius negated y: radius negated z: zmin)
           pMax: (Point x: radius y: radius z: zmax)
 ]
