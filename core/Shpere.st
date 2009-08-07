@@ -1,0 +1,3 @@
+{ import: Shape }
+
+Shpere : Shape ()

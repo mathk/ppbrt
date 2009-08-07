@@ -23,3 +23,6 @@ Shape refine [ self subclassResponsibility: 'Use to refine object' ]
 
 Shape isIntersect [ ^false ]
 Shape intersect: ray [ self subclassResponsibility: 'Return intersection information' ]
+
+Shape shading: aDiffGeo [ ^aDiffGeo ]
+Shape area [ ^0.0 ]
