@@ -4,7 +4,7 @@ LIBS = $(DLIBS:%.so=%.o)
 PATHLIB = ../libs
 PATHGEO =  ../geometry
 SLIB = $(PATHLIB)/libs.a $(PATHGEO)/geometry.a
-IFLAGS = -Wc,'-DDO_ASSERTION -DID_DEBUG' -k -I$(PATHLIB)
+IFLAGS = -Wc,'-DDO_ASSERTION -DID_DEBUG' -k -I$(PATHLIB) -I$(PATHGEO)
 IINC = 
 IDC = idc
 
