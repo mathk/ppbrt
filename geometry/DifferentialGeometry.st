@@ -1,7 +1,7 @@
 { import: Normal }
 { import: st80 }
 
-DifferentialGeometry : Object ( u v shape p n dpdu dpdv dndu dndv )
+DifferentialGeometry : Object ( u v shape p n dpdu dpdv dndu dndv rayT )
 
 DifferentialGeometry initialize
 [
@@ -19,3 +19,4 @@ DifferentialGeometry normal
     ]
 ]
 
+DifferentialGeometry rayT [ ^rayT ]
