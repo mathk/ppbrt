@@ -23,3 +23,9 @@ Sphere bbox
     ^BBox pMin: (Point x: radius negated y: radius negated z: zmin)
           pMax: (Point x: radius y: radius z: zmax)
 ]
+
+Sphere intersect: ray
+[
+    | oRay |
+    oRay := objectToWorld inverse apply: ray.
+]
