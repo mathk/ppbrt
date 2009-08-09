@@ -27,12 +27,21 @@ Sphere bbox
 
 Sphere intersect: ray ifFailed: failed
 [
-    | oRay t0 t1 solve |
+    | oRay phi hitPoint |
     oRay := objectToWorld inverse apply: ray.
+    hitPoint := oRay at: (self findRayT: oRay ifFailed: [ ^failed value ]).
+    phi := hitPoint y atan2: hitPoint x.
+    phi negative whileTrue: [ phi := phi + (2 * Float pi) ].
+]
+
+
+Sphere findRayT: aRay ifFailed: failed
+[
+    | solve t0 t1 |
     solve := QuadraticSolver 
-                solveA: oRay d squaredLength  
-                b: 2 * (oRay o dot: oRay d)
-                c: oRay o squaredLength - (radius * radius).
+                solveA: aRay d squaredLength  
+                b: 2 * (aRay o dot: aRay d)
+                c: aRay o squaredLength - (radius * radius).
     solve hasSolution ifTrue: [ ^failed value ].
     t0 := solve firstSolution.
     t1 := solve secondSolution.
@@ -40,6 +49,8 @@ Sphere intersect: ray ifFailed: failed
         t1 := solve secondSolution.
         t0 := solve firstSolution
     ].
-    (t0 > ray maxt or: [t1 < ray maxt])
+    (t0 > aRay maxt or: [t1 < aRay maxt])
         ifTrue: [ ^failed value ].
+    (t0 < aRay mint)ifTrue: [ t0 := t1 ].
+    ^t0
 ]
