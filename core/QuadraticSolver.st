@@ -12,7 +12,7 @@ QuadraticSolver solveA: anA b: anB c: anC
     c := anC
 ]
 
-Quadraticsolver discrim
+QuadraticSolver discrim
 [
     ^discrim ifNil:
     [  
@@ -20,12 +20,12 @@ Quadraticsolver discrim
     ]
 ]
 
-Quadraticsolver rootDiscrm
+QuadraticSolver rootDiscrm
 [
     ^rootDiscrm ifNil: [ rootDiscrm := self discrim sqrt ]
 ]
 
-Quadraticsolver hasSolution [ ^self discrim > 0 ]
+QuadraticSolver hasSolution [ ^self discrim > 0 ]
 
 QuadraticSolver firstSolution
 [
@@ -39,5 +39,5 @@ QuadraticSolver secondSolution
 
 QuadraticSolver q
 [
-    ^q ifNil: [ q := -0.5 * (b + (b sign * self rootDiscrm ) ]
+    ^q ifNil: [ q := -0.5 * (b + (b sign * self rootDiscrm )) ]
 ]

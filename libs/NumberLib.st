@@ -54,4 +54,4 @@ Number clampMin: min max: max
     self < min ifTrue: [ ^min ]
 ]
 
-Number sign [ self negative ifTrue: [ ^-1.0 ] ifFalse: [ ^1 ]
+Number sign [ self negative ifTrue: [ ^1.0 negated ] ifFalse: [ ^1 ] ]

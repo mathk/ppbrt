@@ -27,12 +27,12 @@ Sphere bbox
 
 Sphere intersect: ray ifFailed: failed
 [
-    | oRay t0 t1 |
+    | oRay t0 t1 solve |
     oRay := objectToWorld inverse apply: ray.
     solve := QuadraticSolver 
                 solveA: oRay d squaredLength  
-                b: 2 * (aRay o dot: aRay d)
-                c: aRay o squaredLength - (radius * radius).
+                b: 2 * (oRay o dot: oRay d)
+                c: oRay o squaredLength - (radius * radius).
     solve hasSolution ifTrue: [ ^failed value ].
     t0 := solve firstSolution.
     t1 := solve secondSolution.
@@ -42,12 +42,4 @@ Sphere intersect: ray ifFailed: failed
     ].
     (t0 > ray maxt or: [t1 < ray maxt])
         ifTrue: [ ^failed value ].
-]
-
-Sphere isIntersect
-[
-    ^(QuadraticSolver 
-                solveA: oRay d squaredLength  
-                b: 2 * (aRay o dot: aRay d)
-                c: aRay o squaredLength - (radius * radius)) hasSolution
 ]
