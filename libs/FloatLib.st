@@ -97,6 +97,18 @@ Float acos
     }
 ]
 
+Float atan2: x
+[
+    self := self copy.
+    {
+        double x, y;
+        memcpy(&x, v_self, sizeof(double));
+        memcpy(&y, v_x, sizeof(double));
+        d = atan2(x, y);
+        memcpy(v_self, &d, sizeof(double));
+    }
+]
+
 Number deg
 [
     ^Degree value: self
