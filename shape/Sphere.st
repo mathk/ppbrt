@@ -1,5 +1,6 @@
 { import: Shape }
 { import: BBox }
+{ import: QuadraticSolver }
 
 Sphere : Shape ( thetaMin thetaMax phiMax radius zmin zmax )
 
@@ -24,8 +25,29 @@ Sphere bbox
           pMax: (Point x: radius y: radius z: zmax)
 ]
 
-Sphere intersect: ray
+Sphere intersect: ray ifFailed: failed
 [
-    | oRay |
+    | oRay t0 t1 |
     oRay := objectToWorld inverse apply: ray.
+    solve := QuadraticSolver 
+                solveA: oRay d squaredLength  
+                b: 2 * (aRay o dot: aRay d)
+                c: aRay o squaredLength - (radius * radius).
+    solve hasSolution ifTrue: [ ^failed value ].
+    t0 := solve firstSolution.
+    t1 := solve secondSolution.
+    t1 < t0 ifTrue: [ 
+        t1 := solve secondSolution.
+        t0 := solve firstSolution
+    ].
+    (t0 > ray maxt or: [t1 < ray maxt])
+        ifTrue: [ ^failed value ].
+]
+
+Sphere isIntersect
+[
+    ^(QuadraticSolver 
+                solveA: oRay d squaredLength  
+                b: 2 * (aRay o dot: aRay d)
+                c: aRay o squaredLength - (radius * radius)) hasSolution
 ]

@@ -21,8 +21,14 @@ befor computing intersect
 Shape canIntersect [ ^true ]
 Shape refine [ self subclassResponsibility: 'Use to refine object' ]
 
-Shape isIntersect [ ^false ]
-Shape intersect: ray [ self subclassResponsibility: 'Return intersection information' ]
+Shape isIntersect: ray 
+[ 
+    self intersect: ray ifFailed: [ ^false ].
+    ^true
+]
+
+Shape intersect: ray [ ^self intersect: ray ifFailed: [ self error: 'Ray do not intersect the shape'  ] ]
+Shape intersect: ray ifFailed: aBlock [ self subclassResponsibility: 'Return intersection information' ]
 
 Shape shading: aDiffGeo [ ^aDiffGeo ]
 Shape area [ ^0.0 ]

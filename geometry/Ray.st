@@ -40,6 +40,9 @@ Ray printOn: aStream
             print: o
 ]
 
+Ray direction [ ^d ]
+Ray origin [ ^o ]
+
 Ray at: aNumber 
 [
     self assert: [(aNumber >= mint) and: [(aNumber <= maxt)] ].
