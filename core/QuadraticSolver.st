@@ -1,7 +1,7 @@
 { import: NumberLib }
 { import: FloatLib }
 
-QuadraticSolver : Object( a b c q discrim rootDiscrm )
+QuadraticSolver : Object( a b c q discrim rootDiscrm first second )
 
 
 QuadraticSolver solveA: anA b: anB c: anC
@@ -29,12 +29,12 @@ QuadraticSolver hasSolution [ ^self discrim > 0 ]
 
 QuadraticSolver firstSolution
 [
-    ^self q / a
+    ^first ifNil: [ first := (self q / a) min: (c / self q) ]
 ]
 
 QuadraticSolver secondSolution
 [
-    ^c / self q
+    ^second ifNil: [ second := (self q / a) max: (c / self q) ]
 ]
 
 QuadraticSolver q

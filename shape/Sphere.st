@@ -29,9 +29,18 @@ Sphere intersect: ray ifFailed: failed
 [
     | oRay phi hitPoint |
     oRay := objectToWorld inverse apply: ray.
-    hitPoint := oRay at: (self findRayT: oRay ifFailed: [ ^failed value ]).
+    solve := self findRayT: oRay ifFailed: [ ^failed value ].
+    
+    hitPoint := oRay at: (self findRayT: oRay ifFailed: [ ^failed value ]) firstSolution.
     phi := hitPoint y atan2: hitPoint x.
     phi negative whileTrue: [ phi := phi + (2 * Float pi) ].
+
+]
+
+Sphere clipingCheck: aRay hitT: t ifFailed: failed
+[
+    (t > aRay maxt or: [t < aRay mint]) ifTrue: [ ^failed value ].
+    
 ]
 
 
@@ -45,12 +54,7 @@ Sphere findRayT: aRay ifFailed: failed
     solve hasSolution ifTrue: [ ^failed value ].
     t0 := solve firstSolution.
     t1 := solve secondSolution.
-    t1 < t0 ifTrue: [ 
-        t1 := solve secondSolution.
-        t0 := solve firstSolution
-    ].
-    (t0 > aRay maxt or: [t1 < aRay maxt])
+    (t0 > aRay maxt or: [t1 < aRay mint])
         ifTrue: [ ^failed value ].
-    (t0 < aRay mint)ifTrue: [ t0 := t1 ].
-    ^t0
+    ^solve
 ]
