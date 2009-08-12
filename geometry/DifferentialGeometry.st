@@ -1,7 +1,21 @@
 { import: Normal }
 { import: st80 }
 
-DifferentialGeometry : Object ( u v shape p n dpdu dpdv dndu dndv rayT )
+DifferentialGeometry : Object ( u v shape p n dpdu dpdv dndu dndv hitP )
+
+DifferentialGeometry shape: s hit: phit u: anU v: anV 
+                     dpdu: aDpdu dpdv: aDpdv dndu: aDndu dndv: aDndv
+[
+    self := self new.
+    dpdu := aDpdu.
+    dpdv := aDpdv.
+    dndu := aDndu.
+    dndv := aDndv.
+    shape := s.
+    u := anU.
+    v := anV.
+    hitP := phit
+]
 
 DifferentialGeometry initialize
 [
@@ -19,4 +33,4 @@ DifferentialGeometry normal
     ]
 ]
 
-DifferentialGeometry rayT [ ^rayT ]
+DifferentialGeometry p [ ^p ]
