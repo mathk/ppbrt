@@ -1,6 +1,7 @@
 { import: Shape }
 { import: BBox }
 { import: QuadraticSolver }
+{ import: DifferentialGeometry }
 
 Sphere : Shape ( thetaMin thetaMax phiMax radius zmin zmax )
 
@@ -46,7 +47,11 @@ Sphere clipingCheck: aRay hitT: t ifFailed: failed
 
 Sphere parametricValueAt: p ifFailed: failed
 [
-    | phi theta u v invzradius dpdu dpdv cosphi sinphi thetaDiff |
+    | phi theta u v invzradius dpdu dpdv 
+      cosphi sinphi thetaDiff d2pd2u d2pd2v
+      d2pduv eE fF gG nN e f g invEGF2 dndu
+      dndv |
+
     phi := p y atan2: p x.
     phi negative ifTrue: [ phi := phi + (2 * Float pi) ].
     phi > phiMax ifTrue: [ ^failed value ].
@@ -60,8 +65,24 @@ Sphere parametricValueAt: p ifFailed: failed
     dpdu := Vector x:  thetaMax negated * p y z: thetaMax * p x z: 0.0.
     dpdv := thetaDiff * (Vector x: p z * cosphi 
                                 y: p z * sinphi
-                                z: (thetaMin + (v * thetaDiff)) sin * radius negatedx.
-    
+                                z: (thetaMin + (v * thetaDiff)) sin * radius negated).
+    d2pd2u := phiMax * phiMax negated * (Vector x: p x y: p y z: 0.0).
+    d2pduv := thetaDiff * p z * phiMax * (Vector x: sinphi negated y: cosphi z: 0.0).
+    d2pd2v := thetaDiff * thetaDiff negated * (Vector x: p x y: p y z: p z).
+    eE := dpdu dot: dpdu.
+    fF := dpdu  dot: dpdv.
+    gG := dpdv dot: dpdv.
+    nN := dpdu cross: dpdv.
+    e := nN dot: d2pd2u.
+    f := nN dot: d2pduv.
+    g := nN dot: d2pd2v.
+    invEGF2 := 1.0 / ((eE * gG) - (fF * fF)).
+    dndu := ((f * fF) - (e * gG)) * invEGF2 * dpdu + 
+            ((e * fF) - (f * eE)) * invEGF2 * dpdv.
+    dndv := ((g * fF) - (f * gG)) * invEGF2 * dpdu + 
+            ((f * fF) - (g * eE)) * invEGF2 * dpdv.
+    ^DifferentialGeometry shape: self hit: p u: u v: v 
+                          dpdu: dpdu dpdv: dpdv dndu: dndu dndv: dndv
 ] 
 
 
