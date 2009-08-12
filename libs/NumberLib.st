@@ -55,3 +55,6 @@ Number clampMin: min max: max
 ]
 
 Number sign [ self negative ifTrue: [ ^1.0 negated ] ifFalse: [ ^1 ] ]
+Number acos [ ^self asFloat acos]
+Number atan2: x [ ^self asFloat atan2: x asFloat ]
+Number cos [ ^self asFloat cos ]
