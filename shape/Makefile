@@ -1,10 +1,10 @@
-PROGRAM = 
-DLIBS = $(PROGRAM:%Test=%.so) Sphere.so
+PROGRAM = SphereTest
+DLIBS = $(PROGRAM:%Test=%.so)
 LIBS = $(DLIBS:%.so=%.o)
 PATHLIB = ../libs
 PATHGEO =  ../geometry
 PATHCORE = ../core
-SLIB = $(PATHLIB)/libs.a $(PATHGEO)/geometry.a $(PATHCORE)/core.a
+SLIB = $(PATHLIB)/libs.a $(PATHGEO)/geometry.a $(PATHCORE)/core.a shape.a
 IFLAGS = -Wc,'-DDO_ASSERTION -DID_DEBUG' -k -I$(PATHLIB) -I$(PATHCORE) -I$(PATHGEO)
 IINC = 
 IDC = idc
@@ -14,6 +14,7 @@ all : shape.a
 dlib : $(PROGRAM) 
 
 runtest : all dlib
+	./SphereTest
 
 %Test : %Test.st
 	$(IDC) $(IFLAGS) $< $(SLIB) -o $@
