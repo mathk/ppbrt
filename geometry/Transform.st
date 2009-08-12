@@ -12,18 +12,18 @@ Transform inverse
     ]
 ]
 
-Transform translat: delta
+Transform translate: delta
 [
     | inverse |
     self := self new.   
     matrix := (Matrix rows: 4 cols: 4) identity.
-    matrix i: 1 j: 4 put delta x.
-    matrix i: 2 j: 4 put delta y.
-    matrix i: 3 j: 4 put delta z.
+    matrix i: 1 j: 4 put: delta x.
+    matrix i: 2 j: 4 put: delta y.
+    matrix i: 3 j: 4 put: delta z.
     inverse := matrix identity.
-    inverse i: 1 j: 4 put delta x negated.
-    inverse i: 2 j: 4 put delta y negated.
-    inverse i: 3 j: 4 put delta z negated.
+    inverse i: 1 j: 4 put: delta x negated.
+    inverse i: 2 j: 4 put: delta y negated.
+    inverse i: 3 j: 4 put: delta z negated.
     matrix inverse: inverse.
     inverse inverse: matrix.
 ]

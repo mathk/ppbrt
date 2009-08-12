@@ -1,5 +1,5 @@
 PROGRAM = 
-DLIBS = $(PROGRAM:%Test=%.so) Shape.so
+DLIBS = $(PROGRAM:%Test=%.so) Shape.so QuadraticSolver.so
 LIBS = $(DLIBS:%.so=%.o)
 PATHLIB = ../libs
 PATHGEO =  ../geometry

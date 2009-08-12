@@ -101,7 +101,7 @@ Float atan2: x
 [
     self := self copy.
     {
-        double x, y;
+        double x, y, d;
         memcpy(&x, v_self, sizeof(double));
         memcpy(&y, v_x, sizeof(double));
         d = atan2(x, y);

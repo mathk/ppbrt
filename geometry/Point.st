@@ -8,6 +8,11 @@ Point new
     ^self x: 0.0 y: 0.0 z: 0.0
 ]
 
+Point origin
+[
+    ^self x: 0.0 y: 0.0 z: 0.0
+]
+
 Point x: anX y: anY z: anZ
 [
     self := super new.
