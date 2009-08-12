@@ -12,11 +12,11 @@
                 maxphi: 135.0 deg.
     r := Ray origin: (Point x: -1.5 y: 2.0 z: 0.0) 
              direction: (Vector x: 1.5 y: -2.0 z: 0.0 ).
-    s intersect: r ifFailed: [{printf(_backtrace());}. 's do not intesct r' putln].
+    (s intersect: r ifFailed: [{printf(_backtrace());}. 's do not intesct r' putln]) putln.
     r := Ray origin: (Point x: -2.5 y: 2.0 z: 0.0) 
              direction: (Vector x: 2.5 y: -2.0 z: 0.0 ).
-    s intersect: r ifFailed: [{printf(_backtrace());}. 's do not intesct r' putln].
+    s intersect: r ifFailed: [{printf(_backtrace());}. 's do not intesct r' putln] .
     r := Ray origin: (Point x: -2.5 y: -2.0 z: 0.0) 
              direction: (Vector x: 2.5 y: 2.0 z: 0.0 ).
-    s intersect: r ifFailed: [{printf(_backtrace());}. 's do not intesct r' putln].
+    (s intersect: r ifFailed: [{printf(_backtrace());}. 's do not intesct r' putln]) putln.
 ]
