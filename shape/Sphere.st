@@ -37,14 +37,32 @@ Sphere intersect: ray ifFailed: failed
 
 Sphere clipingCheck: aRay hitT: t ifFailed: failed
 [
-    | phi hitPoint |
+    | hitPoint |
     (t > aRay maxt or: [t < aRay mint]) ifTrue: [ ^failed value ].
     hitPoint := aRay at: t.
     (hitPoint z < zmin or: [hitPoint z > zmax]) ifTrue: [ ^failed value ].
-    phi := hitPoint y atan2: hitPoint x.
-    phi negative ifTrue: [ phi := phi + (2 * Float pi) ].
-    phi > phiMax ifTrue: [ ^failed value ]
+    ^self parametricValueAt: hitPoint ifFailed: [ ^failed value ]
 ]
+
+Sphere parametricValueAt: p ifFailed: failed
+[
+    | phi theta u v invzradius dpdu dpdv cosphi sinphi thetaDiff |
+    phi := p y atan2: p x.
+    phi negative ifTrue: [ phi := phi + (2 * Float pi) ].
+    phi > phiMax ifTrue: [ ^failed value ].
+    theta = (p z / radius) acos.
+    thetaDiff := (thetaMax - thetaMin).
+    u := phi / phiMax.
+    v := (theta - thetaMin) / thetaDiff.
+    invzradius := 1 / p zradius.
+    cosphi := p x * invzradius.
+    sinphi := p y * invzradius.
+    dpdu := Vector x:  thetaMax negated * p y z: thetaMax * p x z: 0.0.
+    dpdv := thetaDiff * (Vector x: p z * cosphi 
+                                y: p z * sinphi
+                                z: (thetaMin + (v * thetaDiff)) sin * radius negatedx.
+    
+] 
 
 
 Sphere findRayT: aRay ifFailed: failed
