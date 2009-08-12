@@ -16,7 +16,7 @@ QuadraticSolver discrim
 [
     ^discrim ifNil:
     [  
-        discrim := (b * b) + (4.0 * a * c)
+        discrim := (b * b) - (4.0 * a * c)
     ]
 ]
 
