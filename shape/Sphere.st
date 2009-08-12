@@ -14,8 +14,8 @@ Sphere toWorld: o2w orientation: ro radius: r
     reverseOrientation := ro.
     zmin := minz clampMin: radius negated max: radius.
     zmax := maxz clampMin: radius negated max: radius.
-    thetaMin := (zmin / radius) acos rad.
-    thetaMax := (zmax / radius) acos rad.
+    thetaMin := (zmin / radius) acos.
+    thetaMax := (zmax / radius) acos. "Todo: may be swap min max"
     phiMax := (maxphi deg clampMin: 0 max: 360) deg rad
     
 ]
@@ -55,14 +55,14 @@ Sphere parametricValueAt: p ifFailed: failed
     phi := p y atan2: p x.
     phi negative ifTrue: [ phi := phi + (2 * Float pi) ].
     phi > phiMax ifTrue: [ ^failed value ].
-    theta = (p z / radius) acos.
+    theta := (p z / radius) acos.
     thetaDiff := (thetaMax - thetaMin).
     u := phi / phiMax.
     v := (theta - thetaMin) / thetaDiff.
     invzradius := 1 / p zradius.
     cosphi := p x * invzradius.
     sinphi := p y * invzradius.
-    dpdu := Vector x:  thetaMax negated * p y z: thetaMax * p x z: 0.0.
+    dpdu := Vector x:  thetaMax negated * p y y: thetaMax * p x z: 0.0.
     dpdv := thetaDiff * (Vector x: p z * cosphi 
                                 y: p z * sinphi
                                 z: (thetaMin + (v * thetaDiff)) sin * radius negated).
