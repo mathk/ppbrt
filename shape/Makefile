@@ -16,7 +16,7 @@ dlib : $(PROGRAM)
 runtest : all dlib
 	./SphereTest
 
-%Test : %Test.st
+%Test : %Test.st $(SLIB)
 	$(IDC) $(IFLAGS) $< $(SLIB) -o $@
 
 %.o : %.st

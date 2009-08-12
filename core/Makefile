@@ -14,7 +14,7 @@ dlib : $(PROGRAM)
 
 runtest : all dlib
 
-%Test : %Test.st
+%Test : %Test.st $(SLIB)
 	$(IDC) $(IFLAGS) $< $(SLIB) -o $@
 
 %.o : %.st

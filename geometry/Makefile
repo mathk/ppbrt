@@ -22,7 +22,7 @@ runtest : all dlib
 	./MatrixTest
 	./TransformTest
 
-%Test : %Test.st
+%Test : %Test.st $(SLIB)
 	$(IDC) $(IFLAGS) $< $(SLIB) -o $@
 
 %.o : %.st
