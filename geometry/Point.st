@@ -60,7 +60,9 @@ Point mult: anObject [ anObject multToPoint: self ]
 Point div: anObject [ anObject divToPoint: self ]
 Point squaredDist: aPoint [ ^(self - aPoint) squaredLength ]
 Point dist: aPoint [ ^(self - aPoint) length ]
-
+Point xradius [ ^self dist: (self x: self x y: 0.0 z: 0.0) ]
+Point yradius [ ^self dist: (self x: 0.0 y: self y z: 0.0) ]
+Point zradius [ ^self dist: (self x: 0.0 y: 0.0 z: self z) ]
 
 Point substractionToPoint: aPoint
 [
