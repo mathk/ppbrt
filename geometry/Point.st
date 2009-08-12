@@ -105,31 +105,3 @@ Point applyTransformation: t
     ^self fromHomogeneous: (t transformPoint: self toHomogeneous)
 ]
 
-"
-
-Number multiplicationToPoint: aPoint
-[
-    ^aPoint x: aPoint x * self y: aPoint y * self z: aPoint z * self
-]
-
-Number divisionToPoint: aPoint
-[
-    self = 0 ifTrue:[self error: 'Division by zero not allowed'].
-    ^aPoint x: aPoint x / self y: aPoint y / self z: aPoint z / self
-]
-
-Number multToPoint: aPoint
-[
-    aPoint x: aPoint x * self;
-            y: aPoint y * self;
-            z: aPoint z * self
-]
-
-Number divToPoint: aPoint
-[
-    aPoint x: aPoint x / self;
-            y: aPoint y / self;
-            z: aPoint z / self
-]
-
-"
