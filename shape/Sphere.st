@@ -77,10 +77,10 @@ Sphere parametricValueAt: p ifFailed: failed
     f := nN dot: d2pduv.
     g := nN dot: d2pd2v.
     invEGF2 := 1.0 / ((eE * gG) - (fF * fF)).
-    dndu := ((f * fF) - (e * gG)) * invEGF2 * dpdu + 
-            ((e * fF) - (f * eE)) * invEGF2 * dpdv.
-    dndv := ((g * fF) - (f * gG)) * invEGF2 * dpdu + 
-            ((f * fF) - (g * eE)) * invEGF2 * dpdv.
+    dndu := (((f * fF) - (e * gG)) * invEGF2 * dpdu) + 
+            (((e * fF) - (f * eE)) * invEGF2 * dpdv).
+    dndv := (((g * fF) - (f * gG)) * invEGF2 * dpdu) + 
+            (((f * fF) - (g * eE)) * invEGF2 * dpdv).
     ^DifferentialGeometry shape: self hit: p u: u v: v 
                           dpdu: dpdu dpdv: dpdv dndu: dndu dndv: dndv
 ] 
