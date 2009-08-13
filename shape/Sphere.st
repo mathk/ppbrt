@@ -34,14 +34,10 @@ Sphere differntialAt: p ifFailed: failed
     | phi theta u v invzradius dpdu dpdv 
       cosphi sinphi thetaDiff d2pd2u d2pd2v
       d2pduv eE fF gG nN e f g invEGF2 dndu
-      dndv |
+      dndv diff |
 
-    phi := self hitPhi: p.
-    phi > phiMax ifTrue: [ ^failed value ].
-    theta := (p z / radius) acos.
-    thetaDiff := (thetaMax - thetaMin).
-    u := phi / phiMax.
-    v := (theta - thetaMin) / thetaDiff.
+    diff := DifferentialGeometry shape: self hit: p.
+    (self addParametricValue: diff at: p) ifTrue: [ ^failed value ].
     invzradius := 1 / p zradius.
     cosphi := p x * invzradius.
     sinphi := p y * invzradius.
@@ -66,7 +62,18 @@ Sphere differntialAt: p ifFailed: failed
             (((f * fF) - (g * eE)) * invEGF2 * dpdv).
     ^DifferentialGeometry shape: self hit: p u: u v: v 
                           dpdu: dpdu dpdv: dpdv dndu: dndu dndv: dndv
-] 
+]
+
+Sphere addParametricValue: differntial at: p
+[
+    | phi theta |
+    phi := self hitPhi: p.
+    phi > phiMax ifTrue: [ ^false ].
+    theta := (p z / radius) acos.
+    differntial u: phi / phiMax.
+    differntial v: (theta - thetaMin) / (thetaMax - thetaMin).
+    ^true
+]
 
 
 Sphere findRayHit: aRay ifFailed: failed

@@ -3,6 +3,13 @@
 
 DifferentialGeometry : Object ( u v shape p n dpdu dpdv dndu dndv hitP )
 
+DifferentialGeometry shape: s hit: phit
+[
+    self := self new.
+    shape := s.
+    hitP := phit
+]
+
 DifferentialGeometry shape: s hit: phit u: anU v: anV 
                      dpdu: aDpdu dpdv: aDpdv dndu: aDndu dndv: aDndv
 [
@@ -16,6 +23,19 @@ DifferentialGeometry shape: s hit: phit u: anU v: anV
     v := anV.
     hitP := phit
 ]
+
+DifferentialGeometry u: aU [ u := aU ]
+DifferentialGeometry v: aV [ v := aV ]
+DifferentialGeometry dpdu: vector [ dpdu := vector ]
+DifferentialGeometry dpdv: vector [ dpdv := vector ]
+DifferentialGeometry dndu: vector [ dndu := vector ]
+DifferentialGeometry dvdv: vector [ dndv := vector ]
+DifferentialGeometry dpdu [ ^dpdu ]
+DifferentialGeometry dpdv [ ^dpdv ]
+DifferentialGeometry dndu [ ^dndu ]
+DifferentialGeometry dvdv [ ^dndv ]
+DifferentialGeometry u [ ^u ]
+DifferentialGeometry v [ ^v ]
 
 DifferentialGeometry initialize
 [
