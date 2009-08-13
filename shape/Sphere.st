@@ -1,14 +1,13 @@
-{ import: Shape }
+{ import: RevolutionShape }
 { import: BBox }
-{ import: QuadraticSolver }
 { import: DifferentialGeometry }
 
-Sphere : Shape ( thetaMin thetaMax phiMax radius zmin zmax )
+Sphere : RevolutionShape ( thetaMin thetaMax radius zmin zmax )
 
 Sphere toWorld: o2w orientation: ro radius: r
        minz: minz maxz: maxz maxphi: maxphi
 [
-    self := self new.
+    self := self phiMax: maxphi.
     radius := r.
     objectToWorld := o2w.
     reverseOrientation := ro.
@@ -16,8 +15,6 @@ Sphere toWorld: o2w orientation: ro radius: r
     zmax := maxz clampMin: radius negated max: radius.
     thetaMin := (zmin / radius) acos.
     thetaMax := (zmax / radius) acos. "Todo: may be swap min max"
-    phiMax := (maxphi deg clampMin: 0 max: 360) deg rad
-    
 ]
 
 Sphere bbox
@@ -26,34 +23,20 @@ Sphere bbox
           pMax: (Point x: radius y: radius z: zmax)
 ]
 
-Sphere intersect: ray ifFailed: failed
+Sphere clipingCheck: hitPoint
 [
-    | oRay solve |
-    oRay := objectToWorld inverse apply: ray.
-    solve := self findRayT: oRay ifFailed: [ ^failed value ].
-    ^self clipingCheck: oRay hitT: solve firstSolution ifFailed: [
-        self  clipingCheck: oRay hitT: solve secondSolution ifFailed: [ ^failed value ]
-    ]
+    (hitPoint z < zmin or: [hitPoint z > zmax]) ifTrue: [ ^false ].
+    ^true
 ]
 
-Sphere clipingCheck: aRay hitT: t ifFailed: failed
-[
-    | hitPoint |
-    (t > aRay maxt or: [t < aRay mint]) ifTrue: [ ^failed value ].
-    hitPoint := aRay at: t.
-    (hitPoint z < zmin or: [hitPoint z > zmax]) ifTrue: [ ^failed value ].
-    ^self parametricValueAt: hitPoint ifFailed: [ ^failed value ]
-]
-
-Sphere parametricValueAt: p ifFailed: failed
+Sphere differntialAt: p ifFailed: failed
 [
     | phi theta u v invzradius dpdu dpdv 
       cosphi sinphi thetaDiff d2pd2u d2pd2v
       d2pduv eE fF gG nN e f g invEGF2 dndu
       dndv |
 
-    phi := p y atan2: p x.
-    phi negative ifTrue: [ phi := phi + (2 * Float pi) ].
+    phi := self hitPhi: p.
     phi > phiMax ifTrue: [ ^failed value ].
     theta := (p z / radius) acos.
     thetaDiff := (thetaMax - thetaMin).
@@ -86,19 +69,14 @@ Sphere parametricValueAt: p ifFailed: failed
 ] 
 
 
-Sphere findRayT: aRay ifFailed: failed
+Sphere findRayHit: aRay ifFailed: failed
 [
-    | solve t0 t1 |
-    solve := QuadraticSolver 
-                solveA: aRay direction squaredLength  
+    ^self quadraticFindRayHit: aRay
+                a: aRay direction squaredLength  
                 b: 2 * ((aRay origin x * aRay direction x) + 
                         (aRay origin y * aRay direction y) + 
                         (aRay origin z * aRay direction z))
-                c: (aRay origin squaredDist: Point origin) - (radius * radius).
-    solve hasSolution ifFalse: [ ^failed value ].
-    t0 := solve firstSolution.
-    t1 := solve secondSolution.
-    (t0 > aRay maxt or: [t1 < aRay mint])
-        ifTrue: [ ^failed value ].
-    ^solve
+                c: (aRay origin squaredDist: Point origin) - 
+                   (radius * radius)
+                ifFailed: [ ^failed value ]
 ]
