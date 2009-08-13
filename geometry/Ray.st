@@ -43,10 +43,10 @@ Ray printOn: aStream
 Ray direction [ ^d ]
 Ray origin [ ^o ]
 
-Ray at: aNumber 
+Ray at: t
 [
-    self assert: [(aNumber >= mint) and: [(aNumber <= maxt)] ].
-    ^o + (d * aNumber) 
+    self assert: [ (self checkInBound: t) not ].
+    ^o + (d * t)
 ]
 
 Ray applyTransformation: t
@@ -57,4 +57,9 @@ Ray applyTransformation: t
     new maxt: self maxt.
     new time: self time.
     ^new
+]
+
+Ray checkInBound: t
+[
+    ^(t > self maxt or: [t < self mint])
 ]
