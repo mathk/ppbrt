@@ -1,5 +1,5 @@
 PROGRAM = SphereTest
-DLIBS = $(PROGRAM:%Test=%.so)
+DLIBS = $(PROGRAM:%Test=%.so) RevolutionShape.so Cylinder.so 
 LIBS = $(DLIBS:%.so=%.o)
 PATHLIB = ../libs
 PATHGEO =  ../geometry
@@ -13,7 +13,7 @@ all : shape.a
 
 dlib : $(PROGRAM) 
 
-runtest : all dlib
+test : all dlib
 	./SphereTest
 
 %Test : %Test.st $(SLIB)

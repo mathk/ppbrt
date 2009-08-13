@@ -13,7 +13,7 @@ all : geometry.a
 
 dlib : $(PROGRAM) 
 
-runtest : all dlib
+test : all dlib
 	./NormalTest
 	./VectorTest
 	./PointTest

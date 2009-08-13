@@ -4,8 +4,8 @@ SUBDIRS = libs $(SUBDIRSRUN)
 all : .FORCE
 	$(SHELL) -ec 'for dir in $(SUBDIRS); do ( cd $$dir; $(MAKE) ); done'
 
-run : all 
-	$(SHELL) -ec 'for dir in $(SUBDIRSRUN); do ( cd $$dir; $(MAKE) runtest ); done'
+test : all 
+	$(SHELL) -ec 'for dir in $(SUBDIRSRUN); do ( cd $$dir; $(MAKE) test ); done'
 
 dist : .FORCE
 	$(SHELL) -ec '( cd dist; $(MAKE) dist )'

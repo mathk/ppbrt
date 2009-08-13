@@ -12,7 +12,7 @@ all : core.a
 
 dlib : $(PROGRAM) 
 
-runtest : all dlib
+test : all dlib
 
 %Test : %Test.st $(SLIB)
 	$(IDC) $(IFLAGS) $< $(SLIB) -o $@
