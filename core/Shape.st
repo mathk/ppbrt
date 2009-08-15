@@ -1,4 +1,5 @@
 { import: QuadraticSolver }
+{ import: DifferentialGeometry }
 { import: FloatLib }
 
 Shape : Object ( objectToWorld reverseOrientation )
@@ -51,6 +52,31 @@ Shape objectSpaceIntersect: ray ifFailed: aBlock
 Shape findRayHit: ray ifFailed: aBlock
 [
     ^self subclassResponsibility: 'Should return the hit point'.
+]
+
+Shape differntialAt: p ifFailed: failed
+[
+    | diff |
+    diff := DifferentialGeometry shape: self hit: p.
+    self addParametricValue: diff at: p ifFailed: [ ^failed value ].
+    self addDerivativesParametric: diff at: p ifFailed: [ ^failed value ].
+    self addDerivativesNormal: diff at: p ifFailed: [ ^failed value ].
+    ^diff
+]
+
+Shape addParametricValue: differential at: p ifFailed: failed
+[
+    self addParametricValue: differential at: p
+]
+
+Shape addDerivativesParametric: diff at: p ifFailed: failed
+[
+    self addDerivativesParametric: diff at: p
+]
+
+Shape addDerivativesNormal: diff at: p ifFailed: failed
+[
+    self addDerivativesNormal: diff at: p
 ]
 
 Shape shading: aDiffGeo [ ^aDiffGeo ]

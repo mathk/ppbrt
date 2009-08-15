@@ -34,16 +34,6 @@ Sphere clipingCheck: hitPoint
     ^true
 ]
 
-Sphere differntialAt: p ifFailed: failed
-[
-    | diff |
-    diff := DifferentialGeometry shape: self hit: p.
-    (self addParametricValue: diff at: p) ifFalse: [ ^failed value ].
-    self addDerivativesParametric: diff at: p.
-    self addDerivativesNormal: diff at: p.
-    ^diff
-]
-
 Sphere addDerivativesParametric: differential at: p
 [
     differential dpdu: (Vector x:  thetaMax negated * p y y: thetaMax * p x z: 0.0).
@@ -53,32 +43,20 @@ Sphere addDerivativesParametric: differential at: p
                                     radius negated)).
 ]
 
-Sphere addParametricValue: differntial at: p
+Sphere addParametricValue: differntial at: p ifFailed: failed
 [
-    p phi > phiMax ifTrue: [ ^false ].
+    p phi > phiMax ifTrue: [ ^failed value ].
     differntial u: p phi / phiMax.
     differntial v: (p theta - thetaMin) / self thetaDiff.
-    ^true
 ]
 
 Sphere addDerivativesNormal: differential at: p
 [
-    | d2pd2u d2pd2v d2pduv eE fF gG nN e f g invEGF2 |
+    | d2pd2u d2pd2v d2pduv |
     d2pd2u := phiMax * phiMax negated * (Vector x: p x y: p y z: 0.0).
     d2pduv := self thetaDiff * p z * phiMax * (Vector x: p sinphi negated y: p cosphi z: 0.0).
     d2pd2v := self thetaDiff * self thetaDiff negated * p toVector.
-    eE := differential dpdu dot: differential dpdu.
-    fF := differential dpdu  dot: differential dpdv.
-    gG := differential dpdv dot: differential dpdv.
-    nN := differential dpdu cross: differential dpdv.
-    e := nN dot: d2pd2u.
-    f := nN dot: d2pduv.
-    g := nN dot: d2pd2v.
-    invEGF2 := 1.0 / ((eE * gG) - (fF * fF)).
-    differential dndu: (((f * fF) - (e * gG)) * invEGF2 * differential dpdu) + 
-            (((e * fF) - (f * eE)) * invEGF2 * differential dpdv).
-    differential dndv: (((g * fF) - (f * gG)) * invEGF2 * differential dpdu) + 
-            (((f * fF) - (g * eE)) * invEGF2 * differential dpdv).
+    differential weingartenD2pd2u: d2pd2u d2pduv: d2pduv d2pd2v: d2pd2v
 ]
 
 

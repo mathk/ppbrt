@@ -62,3 +62,20 @@ DifferentialGeometry printOn: aStream
             nextPutAll: ' Normal: ';
             print: self normal
 ]
+
+DifferentialGeometry weingartenD2pd2u: d2pd2u d2pduv: d2pduv d2pd2v: d2pd2v
+[
+    | invEGF2 eE fF gG nN e f g |
+    eE := self dpdu dot: self dpdu.
+    fF := self dpdu  dot: self dpdv.
+    gG := self dpdv dot: self dpdv.
+    nN := self dpdu cross: self dpdv.
+    e := nN dot: d2pd2u.
+    f := nN dot: d2pduv.
+    g := nN dot: d2pd2v.
+    invEGF2 := 1.0 / ((eE * gG) - (fF * fF)).
+    self dndu: (((f * fF) - (e * gG)) * invEGF2 * self dpdu) + 
+            (((e * fF) - (f * eE)) * invEGF2 * self dpdv).
+    self dndv: (((g * fF) - (f * gG)) * invEGF2 * self dpdu) + 
+            (((f * fF) - (g * eE)) * invEGF2 * self dpdv).
+]
