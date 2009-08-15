@@ -87,17 +87,19 @@ Point phi
     ^phi ifNil: [ | phiout |
         phiout := self cosphi acos.
         phiout negative ifTrue: [ phiout := phiout + (2 * Float pi) ].
+        'Phi : ' put.
+        phiout putln.
         phi := phiout
     ]
 ]
 
 "
 Angle between Op and the plan xOy
-The answer is between -pi/2 and pi/2
+The answer is between 0 and pi
 "
 Point theta
 [
-    ^theta ifNil: [ theta := (self z / self radius) acos]
+    ^theta ifNil: [ theta := (self z / self radius) acos. 'Theta: 'put. theta putln;yourself]
 ]
 
 Point substractionToPoint: aPoint

@@ -36,31 +36,15 @@ Sphere clipingCheck: hitPoint
 
 Sphere differntialAt: p ifFailed: failed
 [
-    |  d2pd2u d2pd2v
-      d2pduv eE fF gG nN e f g invEGF2 diff |
-
+    | diff |
     diff := DifferentialGeometry shape: self hit: p.
-    (self addParametricValue: diff at: p) ifTrue: [ ^failed value ].
-    self addDerivateivesParametric: diff at: p.
-    d2pd2u := phiMax * phiMax negated * (Vector x: p x y: p y z: 0.0).
-    d2pduv := self thetaDiff * p z * phiMax * (Vector x: p sinphi negated y: p cosphi z: 0.0).
-    d2pd2v := self thetaDiff * self thetaDiff negated * p toVector.
-    eE := diff dpdu dot: diff dpdu.
-    fF := diff dpdu  dot: diff dpdv.
-    gG := diff dpdv dot: diff dpdv.
-    nN := diff dpdu cross: diff dpdv.
-    e := nN dot: d2pd2u.
-    f := nN dot: d2pduv.
-    g := nN dot: d2pd2v.
-    invEGF2 := 1.0 / ((eE * gG) - (fF * fF)).
-    diff dndu: (((f * fF) - (e * gG)) * invEGF2 * diff dpdu) + 
-            (((e * fF) - (f * eE)) * invEGF2 * diff dpdv).
-    diff dndv: (((g * fF) - (f * gG)) * invEGF2 * diff dpdu) + 
-            (((f * fF) - (g * eE)) * invEGF2 * diff dpdv).
+    (self addParametricValue: diff at: p) ifFalse: [ ^failed value ].
+    self addDerivativesParametric: diff at: p.
+    self addDerivativesNormal: diff at: p.
     ^diff
 ]
 
-Sphere addDerivateivesParametric: differential at: p
+Sphere addDerivativesParametric: differential at: p
 [
     differential dpdu: (Vector x:  thetaMax negated * p y y: thetaMax * p x z: 0.0).
     differential dpdv: (self thetaDiff * (Vector x: p z * p cosphi 
@@ -75,6 +59,26 @@ Sphere addParametricValue: differntial at: p
     differntial u: p phi / phiMax.
     differntial v: (p theta - thetaMin) / self thetaDiff.
     ^true
+]
+
+Sphere addDerivativesNormal: differential at: p
+[
+    | d2pd2u d2pd2v d2pduv eE fF gG nN e f g invEGF2 |
+    d2pd2u := phiMax * phiMax negated * (Vector x: p x y: p y z: 0.0).
+    d2pduv := self thetaDiff * p z * phiMax * (Vector x: p sinphi negated y: p cosphi z: 0.0).
+    d2pd2v := self thetaDiff * self thetaDiff negated * p toVector.
+    eE := differential dpdu dot: differential dpdu.
+    fF := differential dpdu  dot: differential dpdv.
+    gG := differential dpdv dot: differential dpdv.
+    nN := differential dpdu cross: differential dpdv.
+    e := nN dot: d2pd2u.
+    f := nN dot: d2pduv.
+    g := nN dot: d2pd2v.
+    invEGF2 := 1.0 / ((eE * gG) - (fF * fF)).
+    differential dndu: (((f * fF) - (e * gG)) * invEGF2 * differential dpdu) + 
+            (((e * fF) - (f * eE)) * invEGF2 * differential dpdv).
+    differential dndv: (((g * fF) - (f * gG)) * invEGF2 * differential dpdu) + 
+            (((f * fF) - (g * eE)) * invEGF2 * differential dpdv).
 ]
 
 

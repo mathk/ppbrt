@@ -1,13 +1,13 @@
 { import: Normal }
 { import: st80 }
 
-DifferentialGeometry : Object ( u v shape p n dpdu dpdv dndu dndv hitP )
+DifferentialGeometry : Object ( u v shape p n dpdu dpdv dndu dndv )
 
 DifferentialGeometry shape: s hit: phit
 [
     self := self new.
     shape := s.
-    hitP := phit
+    p := phit
 ]
 
 DifferentialGeometry shape: s hit: phit u: anU v: anV 
@@ -21,7 +21,7 @@ DifferentialGeometry shape: s hit: phit u: anU v: anV
     shape := s.
     u := anU.
     v := anV.
-    hitP := phit
+    p := phit
 ]
 
 DifferentialGeometry u: aU [ u := aU ]
@@ -29,11 +29,11 @@ DifferentialGeometry v: aV [ v := aV ]
 DifferentialGeometry dpdu: vector [ dpdu := vector ]
 DifferentialGeometry dpdv: vector [ dpdv := vector ]
 DifferentialGeometry dndu: vector [ dndu := vector ]
-DifferentialGeometry dvdv: vector [ dndv := vector ]
+DifferentialGeometry dndv: vector [ dndv := vector ]
 DifferentialGeometry dpdu [ ^dpdu ]
 DifferentialGeometry dpdv [ ^dpdv ]
 DifferentialGeometry dndu [ ^dndu ]
-DifferentialGeometry dvdv [ ^dndv ]
+DifferentialGeometry dndv [ ^dndv ]
 DifferentialGeometry u [ ^u ]
 DifferentialGeometry v [ ^v ]
 
@@ -46,7 +46,7 @@ DifferentialGeometry initialize
 
 DifferentialGeometry normal
 [
-    ^n ifNull: [
+    ^n ifNil: [
         | norm |
         norm := (dpdu cross: dpdv) normalize.
         n := Normal x: norm x y: norm y z: norm z.
@@ -54,3 +54,11 @@ DifferentialGeometry normal
 ]
 
 DifferentialGeometry p [ ^p ]
+
+DifferentialGeometry printOn: aStream
+[
+    aStream nextPutAll: 'Hit at: ';
+            print: p;
+            nextPutAll: ' Normal: ';
+            print: self normal
+]

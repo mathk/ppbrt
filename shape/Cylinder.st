@@ -38,3 +38,7 @@ Cylinder clipingCheck: hitPoint
     (hitPoint z < zmin or: [hitPoint z > zmax]) ifTrue: [ ^false ].
     ^true
 ]
+
+Cylinder differntialAt: p ifFailed: failed
+[
+]
