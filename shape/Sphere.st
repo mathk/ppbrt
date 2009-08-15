@@ -2,7 +2,7 @@
 { import: BBox }
 { import: DifferentialGeometry }
 
-Sphere : RevolutionShape ( thetaMin thetaMax radius zmin zmax )
+Sphere : RevolutionShape ( thetaMin thetaMax thetaDiff radius zmin zmax )
 
 Sphere toWorld: o2w orientation: ro radius: r
        minz: minz maxz: maxz maxphi: maxphi
@@ -15,6 +15,11 @@ Sphere toWorld: o2w orientation: ro radius: r
     zmax := maxz clampMin: radius negated max: radius.
     thetaMin := (zmin / radius) acos.
     thetaMax := (zmax / radius) acos. "Todo: may be swap min max"
+]
+
+Sphere thetaDiff
+[
+    ^thetaDiff ifNil: [ thetaDiff := thetaMax - thetaMin ]
 ]
 
 Sphere bbox
@@ -31,23 +36,15 @@ Sphere clipingCheck: hitPoint
 
 Sphere differntialAt: p ifFailed: failed
 [
-    | phi theta u v invzradius 
-      cosphi sinphi thetaDiff d2pd2u d2pd2v
-      d2pduv eE fF gG nN e f g invEGF2 dndu
-      dndv diff |
+    |  d2pd2u d2pd2v
+      d2pduv eE fF gG nN e f g invEGF2 diff |
 
     diff := DifferentialGeometry shape: self hit: p.
     (self addParametricValue: diff at: p) ifTrue: [ ^failed value ].
-    invzradius := 1 / p zradius.
-    cosphi := p x * invzradius.
-    sinphi := p y * invzradius.
-    diff dpdu: (Vector x:  thetaMax negated * p y y: thetaMax * p x z: 0.0).
-    diff dpdv: (thetaDiff * (Vector x: p z * cosphi 
-                                y: p z * sinphi
-                                z: (thetaMin + (v * thetaDiff)) sin * radius negated)).
+    self addDerivateivesParametric: diff at: p.
     d2pd2u := phiMax * phiMax negated * (Vector x: p x y: p y z: 0.0).
-    d2pduv := thetaDiff * p z * phiMax * (Vector x: sinphi negated y: cosphi z: 0.0).
-    d2pd2v := thetaDiff * thetaDiff negated * (Vector x: p x y: p y z: p z).
+    d2pduv := self thetaDiff * p z * phiMax * (Vector x: p sinphi negated y: p cosphi z: 0.0).
+    d2pd2v := self thetaDiff * self thetaDiff negated * p toVector.
     eE := diff dpdu dot: diff dpdu.
     fF := diff dpdu  dot: diff dpdv.
     gG := diff dpdv dot: diff dpdv.
@@ -63,14 +60,20 @@ Sphere differntialAt: p ifFailed: failed
     ^diff
 ]
 
+Sphere addDerivateivesParametric: differential at: p
+[
+    differential dpdu: (Vector x:  thetaMax negated * p y y: thetaMax * p x z: 0.0).
+    differential dpdv: (self thetaDiff * (Vector x: p z * p cosphi 
+                                y: p z * p sinphi
+                                z: (thetaMin + (differential v * self thetaDiff)) sin * 
+                                    radius negated)).
+]
+
 Sphere addParametricValue: differntial at: p
 [
-    | phi theta |
-    phi := self hitPhi: p.
-    phi > phiMax ifTrue: [ ^false ].
-    theta := (p z / radius) acos.
-    differntial u: phi / phiMax.
-    differntial v: (theta - thetaMin) / (thetaMax - thetaMin).
+    p phi > phiMax ifTrue: [ ^false ].
+    differntial u: p phi / phiMax.
+    differntial v: (p theta - thetaMin) / self thetaDiff.
     ^true
 ]
 

@@ -1,7 +1,7 @@
 { import: Vector }
 { import: Matrix }
 
-Point : Object ( x y z )
+Point : Object ( x y z cosphi sinphi phi theta )
 
 Point new
 [
@@ -20,6 +20,8 @@ Point x: anX y: anY z: anZ
     y := anY.
     z := anZ
 ]
+
+Point toVector [ ^Vector x: self x y: self y z: self z ]
 
 Point x [ ^x ]
 Point y [ ^y ]
@@ -63,6 +65,40 @@ Point dist: aPoint [ ^(self - aPoint) length ]
 Point xradius [ ^self dist: (self x: self x y: 0.0 z: 0.0) ]
 Point yradius [ ^self dist: (self x: 0.0 y: self y z: 0.0) ]
 Point zradius [ ^self dist: (self x: 0.0 y: 0.0 z: self z) ]
+Point radius [ ^self dist: (self origin)]
+
+Point cosphi 
+[
+    ^cosphi ifNil: [ cosphi := self x / self zradius ]
+]
+
+Point sinphi
+[
+    ^sinphi ifNil: [ sinphi := self y / self zradius ]
+]
+
+"
+Phi is the angle between Ox and the projection of 
+the point on xOy.
+The answer is always between 0 and 2*pi
+"
+Point phi 
+[
+    ^phi ifNil: [ | phiout |
+        phiout := self cosphi acos.
+        phiout negative ifTrue: [ phiout := phiout + (2 * Float pi) ].
+        phi := phiout
+    ]
+]
+
+"
+Angle between Op and the plan xOy
+The answer is between -pi/2 and pi/2
+"
+Point theta
+[
+    ^theta ifNil: [ theta := (self z / self radius) acos]
+]
 
 Point substractionToPoint: aPoint
 [
