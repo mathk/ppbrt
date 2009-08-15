@@ -1,17 +1,17 @@
 { import: Normal }
 { import: st80 }
-"{ import: Point }"
 
 Vector : Normal ()
 
 Vector name [ ^'V' ]
-
 Vector volume [ ^x * y * z ]
+Vector null [ ^self x: 0.0 y: 0.0 z: 0.0 ]
+
 Vector orthogonal
 [
     self x abs > self y abs 
-	ifTrue: [
-	    ^(Vector x: self z y: 0.0 z: self x) normalize
+        ifTrue: [
+            ^(Vector x: self z y: 0.0 z: self x) normalize
         ]
         ifFalse: [
             ^(Vector x: 0.0 y: self z z: self y) normalize
