@@ -2,8 +2,8 @@
 
 RevolutionShape : Shape ( phiMax )
 
-RevolutionShape phiMax: phi
+RevolutionShape  toWorld: o2w orientation: ro phiMax: phi
 [
-    self := self new.
+    self := self toWorld: o2w orientation: ro.
     phiMax := (phi deg clampMin: 0 max: 360) deg rad
 ]

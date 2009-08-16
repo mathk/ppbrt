@@ -4,6 +4,12 @@
 
 Shape : Object ( objectToWorld reverseOrientation )
 
+Shape toWorld: o2w orientation: ro
+[
+    objectToWorld := o2w.
+    reverseOrientation := ro.
+]
+
 Shape bbox
 [
     ^self subclassResponsibility: 
@@ -18,6 +24,11 @@ Shape worldBbox
 Shape toObjectSpace: anObject
 [
     ^objectToWorld inverse apply: anObject
+]
+
+Shape toWorldSpace: anObject
+[
+    ^objectToWorld apply: anObject
 ]
 
 "

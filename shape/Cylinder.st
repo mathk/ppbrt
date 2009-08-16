@@ -6,10 +6,8 @@ Cylinder : RevolutionShape ( radius zmin zmax height )
 Cylinder toWorld: o2w orientation: ro radius: r
        minz: minz maxz: maxz maxphi: maxphi
 [
-    self := self phiMax: maxphi.
+    self := self toWorld: o2w orientation: ro phiMax: maxphi.
     radius := r.
-    objectToWorld := o2w.
-    reverseOrientation := ro.
     zmin := minz.
     zmax := maxz
 ]

@@ -7,10 +7,8 @@ Sphere : RevolutionShape ( thetaMin thetaMax thetaDiff radius zmin zmax )
 Sphere toWorld: o2w orientation: ro radius: r
        minz: minz maxz: maxz maxphi: maxphi
 [
-    self := self phiMax: maxphi.
+    self := self toWorld: o2w orientation: ro phiMax: maxphi.
     radius := r.
-    objectToWorld := o2w.
-    reverseOrientation := ro.
     zmin := minz clampMin: radius negated max: radius.
     zmax := maxz clampMin: radius negated max: radius.
     thetaMin := (zmin / radius) acos.

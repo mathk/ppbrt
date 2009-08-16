@@ -1,0 +1,3 @@
+{ import: Shape }
+
+Triangle : Shape ()
