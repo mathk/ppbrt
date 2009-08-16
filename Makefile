@@ -17,6 +17,7 @@ dist-src : .FORCE
 	$(SHELL) -ec '( cd dist; $(MAKE) dist-src )'
 
 config : .FORCE
+
 	$(SHELL) -ec '( cd object; $(MAKE) config )'
 
 win32 : .FORCE
