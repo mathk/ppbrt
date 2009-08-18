@@ -69,3 +69,7 @@ Triangle objectSpaceIntersect: aRay ifFailed: failed
 Triangle clipingCheck: hitPoint [ ^true ]
 
 
+Triangle area
+[
+    ^0.5 * ((p2 - p1) cross: p3 - p1) length
+]
