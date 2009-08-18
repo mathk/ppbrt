@@ -25,6 +25,7 @@
     n2 negated printString putln.
     'n1' put. n1 printString putln.
     'n2' put. n2 printString putln.
-     n1 squaredLength putln.
-     n1 length putln.
+    n1 squaredLength putln.
+    n1 length putln.
+    0.0 * 1.1 = 0.0 ifTrue: ['t' putln ]
 ]

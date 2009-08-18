@@ -25,3 +25,4 @@ syntax: glob
 *.a
 *.exe
 *.dSYM
+*Test

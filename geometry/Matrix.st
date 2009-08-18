@@ -168,7 +168,7 @@ Matrix adaptToInteger: anInteger andSend: operator
 Matrix det
 [
     | det |
-    det := 0.
+    det := 0.0.
     self assert: [self cols = self rows].
     self rows = 1 ifTrue:[^self i: 1 j: 1].
     self indexI: 1 do: [:j :v | 

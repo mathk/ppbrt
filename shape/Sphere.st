@@ -41,11 +41,11 @@ Sphere addDerivativesParametric: differential at: p
                                     radius negated)).
 ]
 
-Sphere addParametricValue: differntial at: p ifFailed: failed
+Sphere addParametric: p ifFailed: failed
 [
     p phi > phiMax ifTrue: [ ^failed value ].
-    differntial u: p phi / phiMax.
-    differntial v: (p theta - thetaMin) / self thetaDiff.
+    p u: p phi / phiMax.
+    p v: (p theta - thetaMin) / self thetaDiff.
 ]
 
 Sphere addDerivativesNormal: differential at: p

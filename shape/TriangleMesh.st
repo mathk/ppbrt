@@ -1,10 +1,9 @@
 { import: Shape }
 { import: BBox }
 
-TriangleMesh : Shape ( nTriangle originalVertices vertices triangleIndex normals  tangents uvs )
-
+TriangleMesh : Shape ( nTriangle originalVertices vertices triangleIndex normals  tangents ) 
 TriangleMesh toWorld: o2w orientation: ro vertices: vs 
-             indexes: i normals: n tangents: t uvs: p
+             indexes: i normals: n tangents: t
 [
     self := self toWorld: o2w orientation: ro.
     originalVertices := vs.
@@ -12,8 +11,6 @@ TriangleMesh toWorld: o2w orientation: ro vertices: vs
     triangleIndex := i.
     normals := n.
     tangents := t.
-    uvs := p
-    
 ]
 
 TriangleMesh bbox
@@ -34,3 +31,4 @@ TriangleMesh bboxTransform: aBlock
         bbox union: (aBlock value: point)
     ]
 ]
+
