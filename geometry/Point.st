@@ -1,7 +1,7 @@
 { import: Vector }
 { import: Matrix }
 
-Point : Object ( x y z cosphi sinphi phi theta u v )
+Point : Object ( x y z cosphi sinphi phi theta )
 
 Point origin
 [
@@ -24,10 +24,6 @@ Point initialize
 
 Point toVector [ ^Vector x: self x y: self y z: self z ]
 
-Point u [ ^u ]
-Point v [ ^v ]
-Point u: aU [ u := aU ]
-Point v: aV [ v := aV ]
 Point x [ ^x ]
 Point y [ ^y ]
 Point z [ ^z ]

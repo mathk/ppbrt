@@ -1,11 +1,11 @@
 { import: Normal }
 { import: st80 }
 
-Vector : Normal ()
+Vector : Normal ( null)
 
 Vector name [ ^'V' ]
 Vector volume [ ^x * y * z ]
-Vector null [ ^self x: 0.0 y: 0.0 z: 0.0 ]
+Vector null [ ^null ifNil: [null := self x: 0.0 y: 0.0 z: 0.0 ] ]
 
 Vector orthogonal
 [

@@ -1,6 +1,6 @@
 { import: Shape }
 { import: Matrix }
-{ import: DifferentialGeometry }
+{ import: DifferentialTriangleGeometry }
 { import: CoordinateSystem }
 
 Triangle : Shape ( p1 p2 p3 n1 n2 n3 uv1 uv2 uv3 )
@@ -14,6 +14,10 @@ Triangle toWorld: o2w orientation: ro p1: point1 p2: point2 p3: point3 mesh: tme
     p3 := point3
 ]
 
+Triangle p1 [ ^p1 ]
+Triangle p2 [ ^p2 ]
+Triangle p3 [ ^p3 ]
+
 Triangle intersect: ray ifFailed: aBlock
 [
     ^ self objectSpaceIntersect: ray ifFailed: aBlock
@@ -22,6 +26,7 @@ Triangle intersect: ray ifFailed: aBlock
 Triangle objectSpaceIntersect: aRay ifFailed: failed
 [
     | t  e1 e2 s1 b0 b1 b2 s s2 divisor invDivisor phit diff a b |
+    diff := DifferentialTriangleGeometry shape: self.
     e1 := p2 - p1.
     e2 := p3 - p1.
     s1 := aRay direction cross: e2.
@@ -35,11 +40,12 @@ Triangle objectSpaceIntersect: aRay ifFailed: failed
     b2 := (aRay direction dot: s2) * invDivisor.
     (b2 < 0.0 and: [ (b2 + b1) > 1.0]) ifTrue: [ ^failed value ].
     t := (e2 dot: s2) * invDivisor.
-    phit := self hitPoint: aRay at: t ifFailed: [ ^failed value ].  
+    phit := self hitPoint: aRay at: t ifFailed: [ ^failed value ].
+    diff := DifferentialTriangleGeometry shape: self hit: phit.
     b0 := 1 - b1 - b2.
-    phit u: (b0 * p1 u) + (b1 * p2 u) + (b2 * p3 u).
-    phit v: (b0 * p1 v) + (b1 * p2 v) + (b2 * p3 v).
-    diff := DifferentialGeometry shape: self hit: phit.
+    diff u: (b0 * p1 u) + (b1 * p2 u) + (b2 * p3 u).
+    diff v: (b0 * p1 v) + (b1 * p2 v) + (b2 * p3 v).
+    
     a := Matrix rows: 2 cols: 2.
     b := Matrix rows: 2 cols: 1.
     b i: 1 j: 1 put: (p1 - p3).

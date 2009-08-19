@@ -42,11 +42,11 @@ Cylinder height
    ^height ifNil: [ height := zmax - zmin ] 
 ]
 
-Cylinder addParametric: p ifFailed: failed
+Cylinder addParametric: diff at: p ifFailed: failed
 [
     p phi > phiMax ifTrue: [ ^failed value ].
-    p u: p phi / phiMax.
-    p v: (p z - zmin) / self height.
+    diff u: p phi / phiMax.
+    diff v: (p z - zmin) / self height.
 ]
 
 Cylinder addDerivativesParametric: differential at: p
