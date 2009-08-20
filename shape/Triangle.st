@@ -25,52 +25,31 @@ Triangle intersect: ray ifFailed: aBlock
 
 Triangle objectSpaceIntersect: aRay ifFailed: failed
 [
-    | t  e1 e2 s1 b0 b1 b2 s s2 divisor invDivisor phit diff a b |
+    | t  phit diff |
     diff := DifferentialTriangleGeometry shape: self.
-    e1 := p2 - p1.
-    e2 := p3 - p1.
-    s1 := aRay direction cross: e2.
-    divisor := s1 dot: e1.
-    divisor = 0.0 ifTrue: [ ^failed value ].
-    invDivisor := 1.0 / divisor.
-    s := aRay origin - p1.
-    b1 := (s dot: s1) * invDivisor.
-    (b1 < 0.0 and: [ b1 > 1.0]) ifTrue: [ ^failed value ].
-    s2 := s cross: e1.
-    b2 := (aRay direction dot: s2) * invDivisor.
-    (b2 < 0.0 and: [ (b2 + b1) > 1.0]) ifTrue: [ ^failed value ].
-    t := (e2 dot: s2) * invDivisor.
+    t := diff computeBarycentricHit: aRay ifFailed: [ ^failed value ].
     phit := self hitPoint: aRay at: t ifFailed: [ ^failed value ].
-    diff := DifferentialTriangleGeometry shape: self hit: phit.
-    b0 := 1 - b1 - b2.
-    diff u: (b0 * p1 u) + (b1 * p2 u) + (b2 * p3 u).
-    diff v: (b0 * p1 v) + (b1 * p2 v) + (b2 * p3 v).
-    
-    a := Matrix rows: 2 cols: 2.
-    b := Matrix rows: 2 cols: 1.
-    b i: 1 j: 1 put: (p1 - p3).
-    b i: 2 j: 1 put: (p2 - p3).
-    a i: 1 j: 1 put: (p1 u - p3 u).
-    a i: 1 j: 2 put: (p1 v - p3 v).
-    a i: 2 j: 1 put: (p2 u - p3 u).
-    a i: 2 j: 2 put: (p2 v - p3 v).
-    a det = 0.0 
-        ifTrue: [
-            | cs |
-            cs := CoordinateSystem fromV1: (e1 cross: e2) normalize.
-            diff dpdu: cs v2.
-            diff dpdv: cs v3
-        ]
-        ifFalse: [
-            | solve |
-            solve := (a inverse * b).
-            diff dpdu: solve i:1 j: 1.
-            diff dpdv: solve i:2 j: 1
-        ]
-    diff dndu: Vector null.
-    diff dndv: Vector null.
+    diff p: phit.
+    self fillDifferentialGeometric: diff at: phit ifFailed: [ ^failed value ]
     ^diff
 ]
+
+Triangle addDerivativesParametric: diff at: p
+[
+    diff computeDerivativesParametric
+]
+
+Triangle addParametric: diff at: p
+[
+    diff computeParametric.
+]
+
+Triangle addDerivativesNormal: diff at: p
+[
+    diff dndu: Vector null.
+    diff dndv: Vector null
+]
+
 
 Triangle clipingCheck: hitPoint [ ^true ]
 

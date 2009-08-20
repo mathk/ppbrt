@@ -16,12 +16,6 @@ Point x: anX y: anY z: anZ
     z := anZ
 ]
 
-Point initialize
-[
-    u := 0.0.
-    v := 0.0
-]
-
 Point toVector [ ^Vector x: self x y: self y z: self z ]
 
 Point x [ ^x ]

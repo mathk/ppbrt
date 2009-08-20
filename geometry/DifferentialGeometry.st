@@ -47,9 +47,9 @@ DifferentialGeometry initialize
 [
     u := 0.
     v := 0.
-    dpdu := Vector null
-    dpdv := Vector null
-    dndu := Vector null
+    dpdu := Vector null.
+    dpdv := Vector null.
+    dndu := Vector null.
     dndv := Vector null
 ]
 
@@ -64,6 +64,7 @@ DifferentialGeometry normal
 ]
 
 DifferentialGeometry p [ ^p ]
+DifferentialGeometry p: point [ p := point ]
 
 DifferentialGeometry printOn: aStream
 [

@@ -69,10 +69,15 @@ Shape differntialAt: p ifFailed: failed
 [
     | diff |
     diff := DifferentialGeometry shape: self hit: p.
+    self fillDifferentialGeometric: diff at: p ifFailed: [ ^failed value ].
+    ^diff
+]
+
+Shape fillDifferentialGeometric: diff at: p ifFailed: failed
+[
     self addParametric: diff at: p ifFailed: [ ^failed value ].
     self addDerivativesParametric: diff at: p ifFailed: [ ^failed value ].
-    self addDerivativesNormal: diff at: p ifFailed: [ ^failed value ].
-    ^diff
+    self addDerivativesNormal: diff at: p ifFailed: [ ^failed value ]
 ]
 
 Shape addParametric: diff at: p ifFailed: failed
