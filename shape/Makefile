@@ -15,6 +15,7 @@ dlib : $(PROGRAM)
 
 test : all dlib
 	./SphereTest
+	./TriangleTest
 
 %Test : %Test.st $(SLIB)
 	$(IDC) $(IFLAGS) $< $(SLIB) -o $@

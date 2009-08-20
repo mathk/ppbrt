@@ -82,7 +82,7 @@ Shape fillDifferentialGeometric: diff at: p ifFailed: failed
 
 Shape addParametric: diff at: p ifFailed: failed
 [
-    self addParametricValue: p
+    self addParametric: diff at: p
 ]
 
 Shape addDerivativesParametric: diff at: p ifFailed: failed

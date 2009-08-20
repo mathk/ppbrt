@@ -29,15 +29,17 @@ DifferentialTriangleGeometry computeBarycentricHit: aRay ifFailed: failed
     ^t
 ]
 
+"TODO When fix how to handle u v"
 DifferentialTriangleGeometry computeParametric
 [
-    self u: (self b0 * shape p1 u) + (self b1 * shape p2 u) + (b2 * shape p3 u).
-    self v: (self b0 * shape p1 v) + (self b1 * shape p2 v) + (b2 * shape p3 v)
+    "self u: (self b0 * shape p1 u) + (self b1 * shape p2 u) + (b2 * shape p3 u).
+    self v: (self b0 * shape p1 v) + (self b1 * shape p2 v) + (b2 * shape p3 v)"
 ]
 
+"TODO When fix how to handle u v"
 DifferentialTriangleGeometry computeDerivativesParametric
 [
-    | a b |
+"    | a b |
     a := Matrix rows: 2 cols: 2.
     b := Matrix rows: 2 cols: 1.
     b i: 1 j: 1 put: (shape p1 - shape p3).
@@ -58,5 +60,7 @@ DifferentialTriangleGeometry computeDerivativesParametric
             solve := (a inverse * b).
             self dpdu: solve i:1 j: 1.
             self dpdv: solve i:2 j: 1
-        ]
+        ]"
+    self dpdu: (Vector x: 1.0 y: 0.0 z: 0.0).
+    self dpdv: (Vector x: 1.0 y: 0.4 z: 0.0)
 ]

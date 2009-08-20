@@ -30,7 +30,8 @@ Triangle objectSpaceIntersect: aRay ifFailed: failed
     t := diff computeBarycentricHit: aRay ifFailed: [ ^failed value ].
     phit := self hitPoint: aRay at: t ifFailed: [ ^failed value ].
     diff p: phit.
-    self fillDifferentialGeometric: diff at: phit ifFailed: [ ^failed value ]
+    phit putln.
+    self fillDifferentialGeometric: diff at: phit ifFailed: [ ^failed value ].
     ^diff
 ]
 
@@ -47,7 +48,8 @@ Triangle addParametric: diff at: p
 Triangle addDerivativesNormal: diff at: p
 [
     diff dndu: Vector null.
-    diff dndv: Vector null
+    diff dndv: Vector null.
+    'ok null' putln
 ]
 
 
