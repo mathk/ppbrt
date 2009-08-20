@@ -1,14 +1,16 @@
 PROGRAM = 
-DLIBS = $(PROGRAM:%Test=%.so) Shape.so QuadraticSolver.so Primitive.so
+DLIBS = $(PROGRAM:%Test=%.so) GeometricPrimitive.so 
 LIBS = $(DLIBS:%.so=%.o)
 PATHLIB = ../libs
 PATHGEO =  ../geometry
-SLIB = $(PATHLIB)/libs.a $(PATHGEO)/geometry.a
-IFLAGS = -Wc,'-DDO_ASSERTION -DID_DEBUG' -k -I$(PATHLIB) -I$(PATHGEO)
+PATHSHAPE = ../shape
+PATHCORE = ../core
+SLIB = $(PATHLIB)/libs.a $(PATHGEO)/geometry.a $(PATHSHAPE)/shape.a
+IFLAGS = -Wc,'-DDO_ASSERTION -DID_DEBUG' -k -I$(PATHLIB) -I$(PATHGEO) -I$(PATHSHAPE) -I$(PATHCORE)
 IINC = 
 IDC = idc
 
-all : core.a
+all : primitive.a
 
 dlib : $(PROGRAM) 
 
@@ -23,7 +25,7 @@ test : all dlib
 %.so : %.st
 	$(IDC) $(IFLAGS) -s $< -o $@
 
-core.a : $(LIBS)
+primitive.a : $(LIBS)
 	ar rc $@.new $(LIBS)
 	mv $@.new $@	
 

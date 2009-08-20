@@ -1,4 +1,4 @@
-SUBDIRSRUN = geometry core shape
+SUBDIRSRUN = geometry core shape primitive
 SUBDIRS = libs $(SUBDIRSRUN)
 
 all : .FORCE

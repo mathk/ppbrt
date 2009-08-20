@@ -12,6 +12,13 @@ Transform inverse
     ]
 ]
 
+Transform identity
+[
+    self new.
+    matrix := (Matrix rows: 4 cols: 4) identity.
+    matrix inverse: matrix
+]
+
 Transform translate: delta
 [
     | inverse |
