@@ -21,10 +21,10 @@ DifferentialTriangleGeometry computeBarycentricHit: aRay ifFailed: failed
     invDivisor := 1.0 / divisor.
     s := aRay origin - shape p1.
     b1 := (s dot: s1) * invDivisor.
-    (self b1 < 0.0 and: [ self b1 > 1.0]) ifTrue: [ ^failed value ].
+    (self b1 < 0.0 or: [ self b1 > 1.0]) ifTrue: [ ^failed value ].
     s2 := s cross: self e1.
     b2 := (aRay direction dot: s2) * invDivisor.
-    (self b2 < 0.0 and: [ (self b2 + self b1) > 1.0]) ifTrue: [ ^failed value ].
+    (self b2 < 0.0 or: [ (self b2 + self b1) > 1.0]) ifTrue: [ ^failed value ].
     t := (e2 dot: s2) * invDivisor.
     ^t
 ]
