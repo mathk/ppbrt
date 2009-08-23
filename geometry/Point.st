@@ -123,6 +123,34 @@ Point unionBBox: aBBox
     ^aBBox unionBBox: (aBBox one: self)
 ]
 
+Point do: aBlock
+[
+    aBlock value: self x.
+    aBlock value: self y.
+    aBlock value: self z
+]
+
+Point with: aPoint do: aBlock
+[
+    aBlock value: self x value: aPoint x.
+    aBlock value: self y value: aPoint y.
+    aBlock value: self z value: aPoint z
+]
+
+Point with: aPoint1 with: aPoint2 do: aBlock
+[
+    aBlock value: self x value: aPoint1 x value: aPoint2 x.
+    aBlock value: self y value: aPoint1 y value: aPoint2 y.
+    aBlock value: self z value: aPoint1 z value: aPoint2 z
+]
+
+Point with: aPoint1 with: aPoint2 with: aPoint3 do: aBlock
+[
+    aBlock value: self x value: aPoint1 x value: aPoint2 x value: aPoint3 x.
+    aBlock value: self y value: aPoint1 y value: aPoint2 y value: aPoint3 y.
+    aBlock value: self z value: aPoint1 z value: aPoint2 z value: aPoint3 z
+]
+
 Point printOn: aStream
 [
     aStream

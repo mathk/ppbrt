@@ -39,7 +39,7 @@ befor computing intersect
 Shape canIntersect [ ^true ]
 Shape refine [ self subclassResponsibility: 'Use to refine object' ]
 
-Shape isIntersect: ray 
+Shape isIntersecting: ray 
 [ 
     self intersect: ray ifFailed: [ ^false ].
     ^true

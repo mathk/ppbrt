@@ -23,6 +23,21 @@ Degree deg
     ^value
 ]
 
+Float maxVal
+[
+    ^1.7976931348623159e308
+]
+
+Float inf
+[
+    ^Float maxVal * Float maxVal
+]
+
+Float nan
+[
+    ^(0.0 /0.0)
+]
+
 Float sqrt
 [
     self := self copy.

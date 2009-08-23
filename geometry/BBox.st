@@ -96,3 +96,25 @@ BBox toBSphere
     ^BSphere center: c
              radius: pMax dist: c
 ]
+
+BBox isIntersecting: ray
+[
+    | t0 t1 |
+    t0 := ray mint.
+    t1 := ray maxt.
+    pMin with: pMax with: ray d with: rayo do: [:cmin :cmax :cray :cori |
+        | tnear tfar cinvray |
+        cinvray := 1.0 / cray.
+        tnear := (cmin - cori) * cinvray.
+        tfar := (cmax - cori) * cinvray.
+        tfar < tnear ifTrue: [ | temp| 
+            temp := tnear.
+            tnear := tfar.
+            tfar := temp
+        ].
+        tnear > t0 ifTrue: [t0 := tnear].
+        tfar < t1 ifTrue: [t0 := tfar].
+        t0 > t1 ifTrue: [^false]
+    ]
+    ^true
+]
