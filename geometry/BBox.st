@@ -99,10 +99,17 @@ BBox toBSphere
 
 BBox isIntersecting: ray
 [
+    self intersectParametric: ray ifFailed: [^false].
+    ^true
+]
+
+
+BBox intersectParametric: ray ifFailed: failed
+[
     | t0 t1 |
     t0 := ray mint.
     t1 := ray maxt.
-    pMin with: pMax with: ray d with: rayo do: [:cmin :cmax :cray :cori |
+    pMin with: pMax with: ray d with: ray o do: [:cmin :cmax :cray :cori |
         | tnear tfar cinvray |
         cinvray := 1.0 / cray.
         tnear := (cmin - cori) * cinvray.
@@ -114,7 +121,7 @@ BBox isIntersecting: ray
         ].
         tnear > t0 ifTrue: [t0 := tnear].
         tfar < t1 ifTrue: [t0 := tfar].
-        t0 > t1 ifTrue: [^false]
+        t0 > t1 ifTrue: [^failed value].
     ]
-    ^true
+    ^t0
 ]

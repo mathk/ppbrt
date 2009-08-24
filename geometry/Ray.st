@@ -14,7 +14,7 @@ Ray initialize
 [
     mint := Float epsilon.
     maxt := Float infinity.
-    o := Point new.
+    o := Point origin.
     d := Vector x: 0.0 y: 0.0 z: 1.0.
     time := 0.0
 ]

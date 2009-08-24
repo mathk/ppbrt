@@ -1,7 +1,7 @@
 { import: Normal }
 { import: st80 }
 
-Vector : Normal ( null)
+Vector : Normal ( null )
 
 Vector name [ ^'V' ]
 Vector volume [ ^x * y * z ]
@@ -21,7 +21,7 @@ Vector orthogonal
 
 Vector cross: aVector
 [
-    ^Vector x: (self y * aVector z) - (self z * aVector y)
+    ^self x: (self y * aVector z) - (self z * aVector y)
             y: (self z * aVector x) - (self x * aVector z)
             z: (self x * aVector y) - (self y * aVector x)
 ]

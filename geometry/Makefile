@@ -1,7 +1,7 @@
 PROGRAM = VectorTest CoordinateSystemTest\
 	  NormalTest PointTest RayTest RayDifferentialTest \
 	  BBoxTest MatrixTest TransformTest
-DLIBS = $(PROGRAM:%Test=%.so) BSphere.so DifferentialGeometry.so DifferentialTriangleGeometry.so
+DLIBS = $(PROGRAM:%Test=%.so) BSphere.so DifferentialGeometry.so DifferentialTriangleGeometry.so Triplet.so
 LIBS = $(DLIBS:%.so=%.o)
 PATHLIB = ../libs
 SLIB = $(PATHLIB)/libs.a geometry.a 

@@ -18,7 +18,7 @@ Triplet xyz: aNum
     z := aNum
 ]
 
-Triplet new [ self error: 'Use x:y:z: insthead' ]
+Triplet new [ {printf(_backtrace());}. self error: 'Use x:y:z: insthead' ]
 
 Triplet x [ ^x ]
 Triplet y [ ^y ]
