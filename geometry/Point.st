@@ -1,30 +1,17 @@
 { import: Vector }
 { import: Matrix }
+{ import: Triplet }
 
-Point : Object ( x y z cosphi sinphi phi theta )
+Point : Triplet ( cosphi sinphi phi theta )
 
 Point origin
 [
     ^self x: 0.0 y: 0.0 z: 0.0
 ]
 
-Point x: anX y: anY z: anZ
-[
-    self := super new.
-    x := anX.
-    y := anY.
-    z := anZ
-]
+Point name [ ^'P' ]
 
 Point toVector [ ^Vector x: self x y: self y z: self z ]
-
-Point x [ ^x ]
-Point y [ ^y ]
-Point z [ ^z ]
-
-Point x: anX [ x := anX ]
-Point y: anY [ y := anY ]
-Point z: anZ [ z := anZ ]
 
 Point toHomogeneous
 [
@@ -121,34 +108,6 @@ Point substractionToNormal: aNormal
 Point unionBBox: aBBox
 [
     ^aBBox unionBBox: (aBBox one: self)
-]
-
-Point do: aBlock
-[
-    aBlock value: self x.
-    aBlock value: self y.
-    aBlock value: self z
-]
-
-Point with: aPoint do: aBlock
-[
-    aBlock value: self x value: aPoint x.
-    aBlock value: self y value: aPoint y.
-    aBlock value: self z value: aPoint z
-]
-
-Point with: aPoint1 with: aPoint2 do: aBlock
-[
-    aBlock value: self x value: aPoint1 x value: aPoint2 x.
-    aBlock value: self y value: aPoint1 y value: aPoint2 y.
-    aBlock value: self z value: aPoint1 z value: aPoint2 z
-]
-
-Point with: aPoint1 with: aPoint2 with: aPoint3 do: aBlock
-[
-    aBlock value: self x value: aPoint1 x value: aPoint2 x value: aPoint3 x.
-    aBlock value: self y value: aPoint1 y value: aPoint2 y value: aPoint3 y.
-    aBlock value: self z value: aPoint1 z value: aPoint2 z value: aPoint3 z
 ]
 
 Point printOn: aStream

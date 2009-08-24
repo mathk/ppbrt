@@ -2,37 +2,12 @@
 { import: FloatLib }
 { import: ObjectLib }
 { import: Matrix }
+{ import: Triplet }
 { import: st80}
 
-Normal : Object ( x y z)
-
-Normal x: anX y: anY z: anZ
-[
-    self := super new.
-    x := anX.
-    y := anY.
-    z := anZ
-]
-
-Normal xyz: aNum 
-[
-    self := super new.
-    x := aNum.
-    y := aNum.
-    z := aNum
-]
+Normal : Triplet ()
 
 Normal name [ ^'N' ]
-
-Normal x [ ^x ]
-Normal y [ ^y ]
-Normal z [ ^z ]
-
-Normal x: anX [ x := anX ]
-Normal y: anY [ y := anY ]
-Normal z: anZ [ z := anZ ]
-
-Normal new [ self error: 'Use x:y:z: insthead' ]
 
 Normal + anObject [ ^anObject additionToNormal: self ]
 Normal - anObject [ ^anObject substractionToNormal: self ]
@@ -106,14 +81,3 @@ Normal applyTransformation: t
     ^self fromHomogeneous: (t transformNormal: self toHomogeneous)
 ]
 
-Normal printOn: aStream
-[
-    aStream
-       nextPutAll: self name, '(';
-       print: self x;
-       nextPutAll: ', ';
-       print: self y;
-       nextPutAll: ', ';
-       print: self z;
-       nextPutAll: ')'
-]

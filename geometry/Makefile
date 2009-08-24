@@ -4,7 +4,7 @@ PROGRAM = VectorTest CoordinateSystemTest\
 DLIBS = $(PROGRAM:%Test=%.so) BSphere.so DifferentialGeometry.so DifferentialTriangleGeometry.so
 LIBS = $(DLIBS:%.so=%.o)
 PATHLIB = ../libs
-SLIB = $(PATHLIB)/libs.a geometry.a
+SLIB = $(PATHLIB)/libs.a geometry.a 
 IFLAGS = -Wc,'-DDO_ASSERTION -DID_DEBUG' -k -I$(PATHLIB)
 IINC = 
 IDC = idc
