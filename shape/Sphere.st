@@ -34,6 +34,7 @@ Sphere clipingCheck: hitPoint
 
 Sphere addDerivativesParametric: differential at: p
 [
+    "TODO Transform to world"
     differential dpdu: (Vector x:  thetaMax negated * p y y: thetaMax * p x z: 0.0).
     differential dpdv: (self thetaDiff * (Vector x: p z * p cosphi 
                                 y: p z * p sinphi

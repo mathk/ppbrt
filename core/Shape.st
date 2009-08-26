@@ -19,7 +19,7 @@ Shape bbox
 Shape worldBbox
 [
     ^objectToWorld apply: self bbox
-]
+o2w ]
 
 Shape toObjectSpace: anObject
 [
