@@ -86,7 +86,7 @@ Transform rotY: teta
 Transform rotZ: teta
 [
     | inverse cos sin |
-    self := super new. 
+    self := self new. 
     cos := teta rad cos.
     sin := teta rad sin.
     matrix := (Matrix rows: 4 cols: 4) identity.
@@ -161,12 +161,17 @@ Transform applyInverse: element
     ^self inverse apply: element
 ]
 
+Transform * transform
+[
+    ^self apply: transform
+]
+
 Transform applyTransformation: t
 [
     | m |
     m := t matrix * self matrix.
     m inverse: self matrix inverse * t matrix inverse.
-    self := super new.
+    self := self new.
     matrix := m
 ]
 

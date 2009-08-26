@@ -68,9 +68,9 @@ Shape findRayHit: ray ifFailed: aBlock
 Shape differntialAt: p ifFailed: failed
 [
     | diff |
-    diff := DifferentialGeometry shape: self hit: p.
+    diff := DifferentialGeometry shape: self hit: p toWorld: objectToWorld.
     self fillDifferentialGeometric: diff at: p ifFailed: [ ^failed value ].
-    ^diff
+    ^diff transformToWorld
 ]
 
 Shape fillDifferentialGeometric: diff at: p ifFailed: failed

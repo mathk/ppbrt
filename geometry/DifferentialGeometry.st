@@ -1,8 +1,9 @@
 { import: Normal }
 { import: Vector }
+{ import: Transform }
 { import: st80 }
 
-DifferentialGeometry : Object ( u v shape p n dpdu dpdv dndu dndv )
+DifferentialGeometry : Object ( u v shape p n dpdu dpdv dndu dndv isTransformToWorld toWorld)
 
 DifferentialGeometry shape: s
 [
@@ -14,6 +15,12 @@ DifferentialGeometry shape: s hit: phit
 [
     self := self shape: s.
     p := phit
+]
+
+DifferentialGeometry shape: s hit: phit toWorld: transform
+[
+    self := self shape: s hit: phit.
+    toWorld := transform
 ]
 
 DifferentialGeometry shape: s hit: phit u: anU v: anV 
@@ -42,6 +49,8 @@ DifferentialGeometry dndu [ ^dndu ]
 DifferentialGeometry dndv [ ^dndv ]
 DifferentialGeometry u [ ^u ]
 DifferentialGeometry v [ ^v ]
+DifferentialGeometry toWorld [ ^toWorld ifNil: [Transform identity] ]
+DifferentialGeometry toWorld: t [ toWorld := t ]
 
 DifferentialGeometry initialize
 [
@@ -50,7 +59,8 @@ DifferentialGeometry initialize
     dpdu := Vector null.
     dpdv := Vector null.
     dndu := Vector null.
-    dndv := Vector null
+    dndv := Vector null.
+    isTransformToWorld := false
 ]
 
 
@@ -62,6 +72,8 @@ DifferentialGeometry normal
         n := Normal x: norm x y: norm y z: norm z.
     ]
 ]
+
+DifferentialGeometry normal: normal [ n := normal]
 
 DifferentialGeometry p [ ^p ]
 DifferentialGeometry p: point [ p := point ]
@@ -89,4 +101,17 @@ DifferentialGeometry weingartenD2pd2u: d2pd2u d2pduv: d2pduv d2pd2v: d2pd2v
             (((e * fF) - (f * eE)) * invEGF2 * self dpdv).
     self dndv: (((g * fF) - (f * gG)) * invEGF2 * self dpdu) + 
             (((f * fF) - (g * eE)) * invEGF2 * self dpdv).
+]
+
+DifferentialGeometry transformToWorld
+[
+    isTransformToWorld ifFalse: [
+        isTransformToWorld := true.
+        self dndu: (toWorld apply: self dndu).
+        self dndv: (toWorld apply: self dndv).
+        self dpdu: (toWorld apply: self dpdu).
+        self dpdv: (toWorld apply: self dpdv).
+        self p: (toWorld apply: self p).
+        n := nil
+    ]
 ]
