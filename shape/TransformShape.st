@@ -1,17 +1,22 @@
-{ import: st80 }
+{ import: Shape }
 
-TransfomShape : Shape ( shape )
+TransformShape : Shape ( instanceToWorld shape )
 
-TransfomShape toWorld: i2w shape: s
+TransformShape toWorld: i2w shape: s
 [
-    self := self toWorld: i2w orientation: false.
+    self := self toWorld: s worldToObject * i2w orientation: false.
+    instanceToWorld := i2w.
     shape := s
 ]
 
+
+
 TransformShape objectSpaceIntersect: ray ifFailed: failed
 [
-   "TODO Transform diff to world"
-    ^shape objectSpaceIntersect:ray ifFailed: [ ^failed value ]
+    | diff |
+    diff := shape objectSpaceIntersect:ray ifFailed: [ ^failed value ].
+    diff toWorld: instanceToWorld.
+    ^diff transformToWorld; yourself.
 ]
 
 TransformShape area

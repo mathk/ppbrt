@@ -4,6 +4,25 @@
 
 Shape : Object ( objectToWorld reverseOrientation )
 
+Accelerator := [
+    nil
+]
+
+Shape defaultAccelerator: optimizer
+[
+    Accelerator := optimizer
+]
+
+Shape defaultAccelerator
+[
+    ^Accelerator
+]
+
+Shape optimizer
+[
+    ^self defaultOptimizer
+]
+
 Shape toWorld: o2w orientation: ro
 [
     objectToWorld := o2w.
@@ -19,7 +38,10 @@ Shape bbox
 Shape worldBbox
 [
     ^objectToWorld apply: self bbox
-o2w ]
+]
+
+Shape objectToWorld [ ^objectToWorld ]
+Shape worldToObject [ ^objectToWorld inverse ]
 
 Shape toObjectSpace: anObject
 [

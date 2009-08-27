@@ -50,12 +50,16 @@ DifferentialGeometry dndv [ ^dndv ]
 DifferentialGeometry u [ ^u ]
 DifferentialGeometry v [ ^v ]
 DifferentialGeometry toWorld [ ^toWorld ifNil: [Transform identity] ]
-DifferentialGeometry toWorld: t [ toWorld := t ]
+DifferentialGeometry toWorld: t 
+[
+    isTransformToWorld := false.
+    toWorld := t 
+]
 
 DifferentialGeometry initialize
 [
     u := 0.
-    v := 0.
+     v := 0.
     dpdu := Vector null.
     dpdv := Vector null.
     dndu := Vector null.
@@ -107,11 +111,11 @@ DifferentialGeometry transformToWorld
 [
     isTransformToWorld ifFalse: [
         isTransformToWorld := true.
-        self dndu: (toWorld apply: self dndu).
-        self dndv: (toWorld apply: self dndv).
-        self dpdu: (toWorld apply: self dpdu).
-        self dpdv: (toWorld apply: self dpdv).
-        self p: (toWorld apply: self p).
+        self dndu: (self toWorld apply: self dndu).
+        self dndv: (self toWorld apply: self dndv).
+        self dpdu: (self toWorld apply: self dpdu).
+        self dpdv: (self toWorld apply: self dpdv).
+        self p: (self toWorld apply: self p).
         n := nil
     ]
 ]

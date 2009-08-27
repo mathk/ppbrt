@@ -1,5 +1,5 @@
 PROGRAM = SphereTest TriangleTest
-DLIBS = $(PROGRAM:%Test=%.so) RevolutionShape.so Cylinder.so TriangleMesh.so
+DLIBS = $(PROGRAM:%Test=%.so) RevolutionShape.so Cylinder.so TriangleMesh.so TransformShape.so
 LIBS = $(DLIBS:%.so=%.o)
 PATHLIB = ../libs
 PATHGEO =  ../geometry

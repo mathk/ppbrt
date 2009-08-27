@@ -1,5 +1,5 @@
 SUBDIRSRUN = geometry core shape primitive
-SUBDIRS = libs $(SUBDIRSRUN)
+SUBDIRS = libs $(SUBDIRSRUN) renderer
 
 all : .FORCE
 	$(SHELL) -ec 'for dir in $(SUBDIRS); do ( cd $$dir; $(MAKE) ); done'

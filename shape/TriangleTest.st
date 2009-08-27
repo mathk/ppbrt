@@ -1,13 +1,14 @@
 { import: Point }
 { import: Transform }
+{ import: TransformShape }
 { import: Ray }
 { import: Triangle }
 
 
 
 [
-    | t r z tr |
-    tr := Transform translate: (Vector x:0.0 y: 0.0 z: 1.0).
+    | t r z tr ts trtr |
+    trtr := Transform translate: (Vector x:0.0 y: 0.0 z: 1.0).
     tr := Transform identity.
     t := Triangle toWorld: tr
                   orientation: false
@@ -17,6 +18,10 @@
     r := Ray origin: (tr apply: (Point x: 1.0 y: 1.0 z: 0.0))
              direction: (tr apply: (Vector x: -1.0 y: -0.4 z: 0.4)).
     (t intersect: r ifFailed: [ {printf(_backtrace());}]) putln.
+    ts := TransformShape toWorld: trtr shape: t.
+    (ts intersect: (trtr apply: r) ifFailed: [ {printf(_backtrace());}]) putln.
+    1 to: 100 do: [:i | ts intersect: (trtr apply: r) ifFailed: [ {printf(_backtrace());}]].
+    '100 done' putln.
     Float nan > 2 ifTrue: ['DED' put].
     Float nan <= 2 ifTrue: ['DD' put].
     Float nan putln.
