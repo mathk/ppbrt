@@ -32,3 +32,9 @@ TriangleMesh bboxTransform: aBlock
     ]
 ]
 
+TriangleMesh canIntersect [ ^false ]
+
+TriangleMesh refine 
+[
+    .
+]
