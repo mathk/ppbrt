@@ -26,3 +26,4 @@ syntax: glob
 *.exe
 *.dSYM
 *Test
+main
