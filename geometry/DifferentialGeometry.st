@@ -23,20 +23,6 @@ DifferentialGeometry shape: s hit: phit toWorld: transform
     toWorld := transform
 ]
 
-DifferentialGeometry shape: s hit: phit u: anU v: anV 
-                     dpdu: aDpdu dpdv: aDpdv dndu: aDndu dndv: aDndv
-[
-    self := self new.
-    dpdu := aDpdu.
-    dpdv := aDpdv.
-    dndu := aDndu.
-    dndv := aDndv.
-    shape := s.
-    u := anU.
-    v := anV.
-    p := phit
-]
-
 DifferentialGeometry u: aU [ u := aU ]
 DifferentialGeometry v: aV [ v := aV ]
 DifferentialGeometry dpdu: vector [ dpdu := vector ]

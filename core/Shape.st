@@ -4,25 +4,6 @@
 
 Shape : Object ( objectToWorld reverseOrientation )
 
-Accelerator := [
-    nil
-]
-
-Shape defaultAccelerator: optimizer
-[
-    Accelerator := optimizer
-]
-
-Shape defaultAccelerator
-[
-    ^Accelerator
-]
-
-Shape optimizer
-[
-    ^self defaultOptimizer
-]
-
 Shape toWorld: o2w orientation: ro
 [
     objectToWorld := o2w.

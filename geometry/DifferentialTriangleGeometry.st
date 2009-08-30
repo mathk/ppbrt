@@ -35,7 +35,6 @@ DifferentialTriangleGeometry computeParametric
     self v: (self b0 * shape p1 v) + (self b1 * shape p2 v) + (self b2 * shape p3 v).
 ]
 
-"TODO When fix how to handle u v"
 DifferentialTriangleGeometry computeDerivativesParametric
 [
     | a b |
@@ -59,7 +58,5 @@ DifferentialTriangleGeometry computeDerivativesParametric
             solve := (a inverse * b).
             self dpdu: (solve i:1 j: 1).
             self dpdv: (solve i:2 j: 1)
-        ].
-  "   self dpdu: (Vector x: 1.0 y: 0.0 z: 0.0).
-    self dpdv: (Vector x: 1.0 y: 0.4 z: 0.0)"
+        ]
 ]

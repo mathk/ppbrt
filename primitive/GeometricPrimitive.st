@@ -1,4 +1,5 @@
 { import: Primitive }
+{ import: Intersection }
 
 GeometricPrimitive : Primitive ( shape material areaLight )
 
@@ -35,7 +36,19 @@ GeometricPrimitive worldBbox
     ^shape worldBbox
 ]
 
-GeometricPrimitive intersect: ray
+GeometricPrimitive intersect: ray ifFailed: failed
 [
+    | diff |
+    diff := shape intersect: ray ifFailed: [^failed].
+    ^Intersection differential: diff primitive: self
+]
 
+GeometricPrimitive objectToWorld: object
+[
+    ^shape objectToWorld: object
+]
+
+GeometricPrimitive worldToObject: object
+[
+    ^shape worldToObject: object
 ]
