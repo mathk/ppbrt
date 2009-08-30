@@ -1,7 +1,7 @@
 { import: Point }
 { import: FloatLib }
 
-Ray : Object ( o d mint maxt time )
+Ray : Object ( o d mint maxt time testedPrimitives )
 
 Ray origin: orig direction: dir
 [
@@ -16,7 +16,8 @@ Ray initialize
     maxt := Float infinity.
     o := Point origin.
     d := Vector x: 0.0 y: 0.0 z: 1.0.
-    time := 0.0
+    time := 0.0.
+    testedPrimitives := Dictionary new
 ]
 
 Ray mint [ ^mint ]
@@ -25,6 +26,13 @@ Ray time [ ^time ]
 Ray mint: t [ mint := t ]
 Ray maxt: t [ maxt := t ]
 Ray time: t [ time := t ]
+
+
+Ray isTested: aPrimitive
+[
+    testedPrimitives at: aPrimitive ifAbsent: [ ^false ].
+    ^true
+]
 
 Ray printOn: aStream
 [
