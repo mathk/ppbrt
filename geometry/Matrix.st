@@ -145,7 +145,7 @@ Matrix multiplicationToMatrix: aMatrix
     1 to: aMatrix rows do: [ :i |
         1 to: self cols do: [ :j |
             | v |
-            v := 0.
+            v := 0.0.
             1 to: aMatrix cols do: [:mid |
                 v := v + ((aMatrix i: i j: mid) * (self i: mid j: j)).
             ].

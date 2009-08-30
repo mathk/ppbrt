@@ -26,12 +26,12 @@ Normal div: anObject [ anObject divToNormal: self ]
 
 Normal substractionToNormal: aNormal
 [
-    ^Normal x: aNormal x - x y: aNormal y - y z: aNormal z - z
+    ^self x: aNormal x - x y: aNormal y - y z: aNormal z - z
 ]
 
 Normal additionToNormal: aNormal
 [
-    ^Normal x: aNormal x + x y: aNormal y + y z: aNormal z + z
+    ^self x: aNormal x + x y: aNormal y + y z: aNormal z + z
 ]
 
 Normal subToNormal: aNormal

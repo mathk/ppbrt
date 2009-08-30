@@ -6,6 +6,7 @@ FILES		= $(BIN)ObjectLib.o \
 			  $(BIN)NumberLib.o \
 			  $(BIN)FloatLib.o \
 			  $(BIN)IntegerLib.o \
+			  $(BIN)SmallIntegerLib.o \
 			  $(BIN)Angle.o
 
 PREFIX		= 

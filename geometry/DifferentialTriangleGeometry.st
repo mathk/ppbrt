@@ -5,10 +5,10 @@ DifferentialTriangleGeometry : DifferentialGeometry (b0 b1 b2 e1 e2)
 
 DifferentialTriangleGeometry e1 [ ^e1 ifNil: [ e1 := shape p2 - shape p1 ] ]
 DifferentialTriangleGeometry e2 [ ^e2 ifNil: [ e2 := shape p3 - shape p1 ] ]
-DifferentialTriangleGeometry b0 [ ^b0 ]
+DifferentialTriangleGeometry b0 [ ^b0 ifNil: [ b0 := 1 - b1 - b2] ]
 DifferentialTriangleGeometry b1 [ ^b1 ]
 DifferentialTriangleGeometry b2 [ ^b2 ]
-DifferentialTriangleGeometry b0: aInt [ b0 ifNil: [ b0 := 1 - b1 - b2 ] ]
+DifferentialTriangleGeometry b0: aInt [ b0 := aInt ]
 DifferentialTriangleGeometry b1: aInt [ b1 := aInt ]
 DifferentialTriangleGeometry b2: aInt [ b2 := aInt ]
 
@@ -29,17 +29,16 @@ DifferentialTriangleGeometry computeBarycentricHit: aRay ifFailed: failed
     ^t
 ]
 
-"TODO When fix how to handle u v"
 DifferentialTriangleGeometry computeParametric
 [
-    "self u: (self b0 * shape p1 u) + (self b1 * shape p2 u) + (b2 * shape p3 u).
-    self v: (self b0 * shape p1 v) + (self b1 * shape p2 v) + (b2 * shape p3 v)"
+    self u: (self b0 * shape p1 u) + (self b1 * shape p2 u) + (self b2 * shape p3 u).
+    self v: (self b0 * shape p1 v) + (self b1 * shape p2 v) + (self b2 * shape p3 v).
 ]
 
 "TODO When fix how to handle u v"
 DifferentialTriangleGeometry computeDerivativesParametric
 [
-"    | a b |
+    | a b |
     a := Matrix rows: 2 cols: 2.
     b := Matrix rows: 2 cols: 1.
     b i: 1 j: 1 put: (shape p1 - shape p3).
@@ -58,9 +57,9 @@ DifferentialTriangleGeometry computeDerivativesParametric
         ifFalse: [
             | solve |
             solve := (a inverse * b).
-            self dpdu: solve i:1 j: 1.
-            self dpdv: solve i:2 j: 1
-        ]"
-    self dpdu: (Vector x: 1.0 y: 0.0 z: 0.0).
-    self dpdv: (Vector x: 1.0 y: 0.4 z: 0.0)
+            self dpdu: (solve i:1 j: 1).
+            self dpdv: (solve i:2 j: 1)
+        ].
+  "   self dpdu: (Vector x: 1.0 y: 0.0 z: 0.0).
+    self dpdv: (Vector x: 1.0 y: 0.4 z: 0.0)"
 ]

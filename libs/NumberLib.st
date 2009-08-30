@@ -5,6 +5,11 @@ Number multiplicationToNormal: aNormal
     ^aNormal x: aNormal x * self y: aNormal y * self z: aNormal z * self
 ]
 
+Number additionToNormal: aNormal
+[
+    ^aNormal x: aNormal x + self y: aNormal y + self z: aNormal z + self
+]
+
 Number multiplicationToPoint: aPoint
 [
     ^aPoint x: aPoint x * self y: aPoint y * self z: aPoint z * self
