@@ -28,7 +28,7 @@ tidy: .FORCE
 	rm -f *~
 
 clean : tidy .FORCE
-	rm -f $(PROGRAM) *.exe *.o *.so *.c *.a
+	rm -f $(PROGRAM) *.exe *.o *.so *.c *.a *.dSYM
 
 spotless : clean .FORCE
 
