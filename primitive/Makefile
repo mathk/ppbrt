@@ -1,5 +1,5 @@
 PROGRAM = 
-DLIBS = $(PROGRAM:%Test=%.so) GeometricPrimitive.so Aggregate.so
+DLIBS = $(PROGRAM:%Test=%.so) GeometricPrimitive.so Aggregate.so GridAccelerator.so
 LIBS = $(DLIBS:%.so=%.o)
 PATHLIB = ../libs
 PATHGEO =  ../geometry

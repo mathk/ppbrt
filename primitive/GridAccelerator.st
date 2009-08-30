@@ -1,0 +1,3 @@
+{ import: Aggregate }
+
+GridAccelerator : Aggregate ()
