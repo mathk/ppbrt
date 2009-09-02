@@ -1,7 +1,7 @@
 { import: Primitive }
 { import: Intersection }
 
-GeometricPrimitive : Primitive ( shape material areaLight )
+GeometricPrimitive : Primitive ( shape material areaLight lastRay refined )
 
 GeometricPrimitive shape: s material: m areaLight: l
 [
@@ -10,10 +10,27 @@ GeometricPrimitive shape: s material: m areaLight: l
     areaLight := l
 ]
 
+GeometricPrimitive canHit: ray
+[
+    ^ray ~== lastRay
+]
+
+GeometricPrimitive lastNotHitRay: ray
+[
+    lastRay := ray
+]
+
+GeometricPrimitive refined: primitiveRefine 
+[
+    refined := primitiveRefine
+]
+
 GeometricPrimitive refine
 [
-    ^shape refine collect: [:ishape |
-        self shape: ishape material: material areaLight: areaLight
+    ^refined ifNil: [ 
+        shape refine collect: [:ishape |
+            self shape: ishape material: material areaLight: areaLight
+        ]
     ]
 ]
 

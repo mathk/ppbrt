@@ -1,8 +1,8 @@
 { import: Primitive }
 
-Aggreegate : Primitive (primitives)
+Aggregate : Primitive (primitives)
 
-Aggreegate primitives: allPrimitives refineBefor: refineNeeded 
+Aggregate primitives: allPrimitives refineBefor: refineNeeded 
 [
     self := self new.   
     refineNeeded 
@@ -11,7 +11,7 @@ Aggreegate primitives: allPrimitives refineBefor: refineNeeded
         ifFalse: [ primitives := allPrimitives ]
 ]
 
-Aggreegate initialize
+Aggregate initialize
 [
     primitives := OrderedCollection new
 ]
