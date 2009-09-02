@@ -1,23 +1,14 @@
 { import: Primitive }
 { import: Intersection }
 
-GeometricPrimitive : Primitive ( shape material areaLight lastRay refined )
+GeometricPrimitive : Primitive ( shape material areaLight refined )
 
 GeometricPrimitive shape: s material: m areaLight: l
 [
     shape := s.
     material := m.
-    areaLight := l
-]
-
-GeometricPrimitive canHit: ray
-[
-    ^ray ~== lastRay
-]
-
-GeometricPrimitive lastNotHitRay: ray
-[
-    lastRay := ray
+    areaLight := l.
+    refined := nil
 ]
 
 GeometricPrimitive refined: primitiveRefine 
@@ -36,7 +27,7 @@ GeometricPrimitive refine
 
 GeometricPrimitive areaLight [ ^areaLight ]
 
-GeometricPrimitive canIntersect [ ^shape canIntersect ]
+GeometricPrimitive canIntersect [ ^refined notNil or:[ shape canIntersect ]]
 
 GeometricPrimitive bsdf: diff
 [

@@ -1,6 +1,6 @@
 { import: st80 }
 
-Primitive : Object ()
+Primitive : Object ( lastRay )
 
 Primitive depRefine
 [
@@ -10,4 +10,14 @@ Primitive depRefine
         each canIntersect ifFalse: [ result addAll: each depRefine ]
     ].
     ^result
+]
+
+Primitive canHit: ray
+[
+    ^ray ~== lastRay
+]
+
+Primitive lastNotHitRay: ray
+[
+    lastRay := ray
 ]

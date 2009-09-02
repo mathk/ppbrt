@@ -121,6 +121,7 @@ Shape hitPoint: aRay at: t ifFailed: failed
     (aRay checkInBound: t) ifTrue: [ ^failed value ].
     hitPoint := (aRay at: t).
     (self clipingCheck: hitPoint) ifFalse: [ ^failed value ].
+    aRay maxt: t.
     ^hitPoint
 ]
 
