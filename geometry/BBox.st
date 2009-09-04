@@ -1,7 +1,7 @@
 { import: Point }
 { import: BSphere }
 
-BBox : Object ( pMin pMax )
+BBox : Object ( pMin pMax delta invMaxWidth maxWidth )
 
 BBox pMin [ ^pMin ]
 
@@ -83,10 +83,10 @@ BBox inside: aPoint
     ^cX and: [cY and: [cZ]]
 ]
 
-BBox expand: delta
+BBox expand: deltaExp
 [
-    pMin sub: (Vector xyz: delta).
-    pMax add: (Vector xyz: delta)
+    pMin sub: (Vector xyz: deltaExp).
+    pMax add: (Vector xyz: deltaExp)
 ]
 
 BBox toBSphere
@@ -124,4 +124,19 @@ BBox intersectParametric: ray ifFailed: failed
         t0 > t1 ifTrue: [^failed value].
     ]
     ^t0
+]
+
+BBox delta
+[
+    ^delta ifNil: [delta := pMax - pMin]
+]
+
+BBox maxWidth
+[
+    ^maxWidth ifNil: [maxWidth := (self delta x max: self delta y) max: self delta z]
+]
+
+BBox invMaxWidth
+[
+    ^invMaxWidth ifNil: [invMaxWidth := 1.0 / self maxWidth]
 ]

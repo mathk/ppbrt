@@ -35,6 +35,27 @@ Triplet do: aBlock
     aBlock value: self z
 ]
 
+Triplet withIndexDo: aBlock
+[
+    aBlock value: 1 value: self x.
+    aBlock value: 2 value: self y.
+    aBlock value: 3 value: self z
+]
+
+Triplet at: index put: value
+[
+    index = 1 ifTrue: [x := value].
+    index = 2 ifTrue: [y := value].
+    index = 3 ifTrue: [z := value].
+]
+
+Triplet at: index
+[
+    index = 1 ifTrue: [ ^x ].
+    index = 2 ifTrue: [ ^y ].
+    index = 3 ifTrue: [ ^z ].
+]
+
 Triplet with: aTriplet do: aBlock
 [
     aBlock value: self x value: aTriplet x.

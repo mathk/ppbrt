@@ -112,6 +112,18 @@ Float acos
     }
 ]
 
+Float pow: exp
+[
+    self := self copy.
+    {
+        double x, y, d;
+        memcpy(&x, v_self, sizeof(double));
+        memcpy(&y, v_exp, sizeof(double));
+        d = pow(x, y);
+        memcpy(v_self, &d, sizeof(double));
+    }
+]
+
 Float atan2: x
 [
     self := self copy.
