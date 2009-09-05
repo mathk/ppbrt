@@ -2,12 +2,25 @@
 { import: Voxel }
 { import: Triplet }
 
-GridAccelerator : Aggregate (nVoxel width worldBbox voxelPerUnitDist voxelss)
+GridAccelerator : Aggregate (nVoxel width worldBbox voxelPerUnitDist voxels)
 
 GridAccelerator primitives: allPrimitives refineBefor: refineNeeded
 [
     self := super primitives: allPrimitives refineBefor: refineNeeded.
     primitives do: []
+]
+
+GridAccelerator voxels
+[
+    ^voxels ifNil: [
+        voxels := Array new: self nVoxel x.
+        1 to: self nVoxel x do: [:xindex | 
+            voxels at: xindex put: (Array new: self nVoxel y).
+            1 to: self nVoxel y do: [:yindex | 
+                (voxels at: xindex) at: yindex put: (Array new: self nVoxel z )
+            ]
+        ]
+    ]
 ]
 
 GridAccelerator voxelsPerUnitDist
@@ -58,4 +71,9 @@ GridAccelerator worldBbox
             el union: rsl
         ]
     ]
+]
+
+GridAccelerator voxelAt: tripletCoord
+[
+    ^((voxels at: tripletCoord x) at: tripletCoord y) at: tripletCoord z ifNilPut: [Voxel new]
 ]

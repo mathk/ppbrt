@@ -7,7 +7,8 @@ FILES		= $(BIN)ObjectLib.o \
 			  $(BIN)FloatLib.o \
 			  $(BIN)IntegerLib.o \
 			  $(BIN)SmallIntegerLib.o \
-			  $(BIN)Angle.o
+			  $(BIN)Angle.o \
+			  $(BIN)ArrayLib.o
 
 PREFIX		= 
 
