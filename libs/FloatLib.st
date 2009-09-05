@@ -136,6 +136,41 @@ Float atan2: x
     }
 ]
 
+Float round2Int
+[
+    {
+        double x;
+        int round;
+        memcpy(&x, v_self, sizeof(double));
+#define _doublemagicroundeps (.5-1.4e-11)
+//#ifdef FAST_INT
+#define _doublemagic (double)(6755399441055744.0)
+        x = x + _doublemagic;
+        round =  ((long*)(&x))[0];
+//#else
+//        round = int (x+_doublemagicroundeps)
+//#endif
+        return (oop)(long)((((int)(long)round) << 1) | 1);
+    }
+]
+
+Float float2Int
+[
+    ^(self negated 
+        ifTrue: [self + self doublemagicroundeps]
+        ifFalse: [self - self doublemagicroundeps]) round2Int
+]
+
+Float doublemagicroundeps
+[
+    self := self copy.
+    {   
+        double d;
+        d = .5-1.4e-11;
+        memcpy(v_self, &d, sizeof(double));
+    }
+]
+
 Number deg
 [
     ^Degree value: self

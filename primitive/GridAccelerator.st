@@ -1,5 +1,6 @@
 { import: Aggregate }
 { import: Voxel }
+{ import: Triplet }
 
 GridAccelerator : Aggregate (nVoxel width worldBbox voxelPerUnitDist voxelss)
 
@@ -22,7 +23,9 @@ GridAccelerator voxelPosition: point
     | p |
     p := Triplet xyz: 0.
     point withIndexDo: [:index :value |
-        p at: index put: (value - self worldBbox at: index) / (self width at: index)
+        p at: index put: 
+            ((value - self worldBbox at: index) / (self width at: index)) float2Int
+                clampMin: 1 max: (self nVoxel at: index)
     ].
     ^p
 ]
@@ -30,10 +33,10 @@ GridAccelerator voxelPosition: point
 GridAccelerator nVoxel
 [
     ^nVoxel ifNil: [
-        nVoxel := Tripet xyz: 0.
+        nVoxel := Triplet xyz: 0.
         1 to: 3 do: [:index |  
             nVoxel at: index put: 
-                (((self worldBbox delta at: index) * self voxelPerUnitDist) asInteger clampMin: 1 max: 64)
+                (((self worldBbox delta at: index) * self voxelPerUnitDist) round2Int clampMin: 1 max: 64)
         ]
         nVoxel
     ]
