@@ -35,6 +35,18 @@ Triplet do: aBlock
     aBlock value: self z
 ]
 
+Triplet to: endTriplet do: aBlock
+[
+    self x to: endTriplet x do: [:xcoord|
+        self y to: endTriplet y do: [:ycoord |
+            self z to: endTriplet z do: [:zcoord |
+                aBlock value: (self x: xcoord y: ycoord z: zcoord)
+            ]
+        ]
+    ]
+
+]
+
 Triplet withIndexDo: aBlock
 [
     aBlock value: 1 value: self x.

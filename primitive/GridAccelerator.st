@@ -7,7 +7,14 @@ GridAccelerator : Aggregate (nVoxel width worldBbox voxelPerUnitDist voxels)
 GridAccelerator primitives: allPrimitives refineBefor: refineNeeded
 [
     self := super primitives: allPrimitives refineBefor: refineNeeded.
-    primitives do: []
+    primitives do: [:each |
+        | minCoordVoxel maxCoordVoxel |
+        minCoordVoxel := self voxelPosition: each worldBbox pMin.
+        maxCoordVoxel := self voxelPosition: each worldBbox pMax.
+        minCoordVoxel to: maxCoordVoxel do: [:coord |
+            (self voxelAt: coord) addPrimitive: each
+        ]
+    ]
 ]
 
 GridAccelerator voxels
