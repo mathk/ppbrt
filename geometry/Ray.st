@@ -22,6 +22,8 @@ Ray initialize
 
 Ray mint [ ^mint ]
 Ray maxt [ ^maxt ]
+Ray minp [ ^self at: self mint ]
+Ray maxp [ ^self at: self maxt ]
 Ray time [ ^time ]
 Ray mint: t [ mint := t ]
 Ray maxt: t [ maxt := t ]

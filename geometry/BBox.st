@@ -74,7 +74,7 @@ BBox overlaps: aBBox
     ^cX and: [cY and: [cZ]]
 ]
 
-BBox inside: aPoint
+BBox isInside: aPoint
 [
     | cX cY cZ |
     cX := pMin x <= aPoint x and: [ aPoint x <= pMax x].
@@ -104,7 +104,7 @@ BBox isIntersecting: ray
 ]
 
 
-BBox intersectParametric: ray ifFailed: failed
+BBox intersect: ray ifFailed: failed
 [
     | t0 t1 |
     t0 := ray mint.

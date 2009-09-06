@@ -28,7 +28,7 @@ GridAccelerator voxels
             ]
         ]
     ]
-]
+ ]
 
 GridAccelerator voxelsPerUnitDist
 [
@@ -83,4 +83,14 @@ GridAccelerator worldBbox
 GridAccelerator voxelAt: tripletCoord
 [
     ^((voxels at: tripletCoord x) at: tripletCoord y) at: tripletCoord z ifNilPut: [Voxel new]
+]
+
+GridAccelerator canIntersect [ ^true ]
+
+GridAccelerator intersect: ray ifFailed: failed
+[
+    | startingT |
+    startingT := (self worldBbox isInside: ray minp)
+                        ifTrue: [ ray mint ]
+                        ifFalse: [self worldBbox intersect: ray ifFailed: [ ^failed value]]
 ]

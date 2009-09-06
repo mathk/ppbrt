@@ -21,3 +21,14 @@ Primitive lastNotHitRay: ray
 [
     lastRay := ray
 ]
+
+Primitive isIntersecting: ray
+[
+    self intersect: ray ifFailed: [^false].
+    ^true
+]
+
+Primitive intersect: ray ifFailed: failed
+[
+    self subclassResponsibility: 'Return the intersection of the ray if exist'
+]
