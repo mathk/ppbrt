@@ -1,6 +1,7 @@
 { import: Aggregate }
 { import: Voxel }
 { import: Triplet }
+{ import: Vector }
 
 GridAccelerator : Aggregate (nVoxel width worldBbox voxelPerUnitDist voxels)
 
@@ -50,6 +51,13 @@ GridAccelerator voxelPosition: point
     ^p
 ]
 
+GridAccelerator voxelMinAt: voxelCoord
+[
+    ^self worldBbox pMin + (Vector x: (voxelCoord x - 1) * width x
+                                  y: (voxelCoord y - 1) * width y
+                                  z: (voxelCoord z - 1) * width z)
+]
+
 GridAccelerator nVoxel
 [
     ^nVoxel ifNil: [
@@ -89,8 +97,20 @@ GridAccelerator canIntersect [ ^true ]
 
 GridAccelerator intersect: ray ifFailed: failed
 [
-    | startingT |
-    startingT := (self worldBbox isInside: ray minp)
+    | currentT gridIntersect currentVoxel nextCrossingT deltaT step out |
+    currentT := (self worldBbox isInside: ray minp)
                         ifTrue: [ ray mint ]
-                        ifFalse: [self worldBbox intersect: ray ifFailed: [ ^failed value]]
+                        ifFalse: [self worldBbox 
+                                        intersect: ray 
+                                        ifFailed: [ ^failed value]].
+    gridIntersect := ray at: currentT.
+    currentVoxel := self voxelPosition: gridIntersect.
+    ray direction withIndexDo: [:index :dcoord |
+        dcoord negated 
+            ifFalse: [
+                nextCrossingT := currentT + 12.
+            ]
+            ifTrue: [
+            ]
+    ]
 ]
