@@ -13,7 +13,7 @@ GridAccelerator primitives: allPrimitives refineBefor: refineNeeded
         minCoordVoxel := self voxelPosition: each worldBbox pMin.
         maxCoordVoxel := self voxelPosition: each worldBbox pMax.
         minCoordVoxel to: maxCoordVoxel do: [:coord |
-            (self voxelAt: coord) addPrimitive: each
+            (self voxelAt: coord ifNil: [Voxel new]) addPrimitive: each
         ]
     ]
 ]
@@ -88,27 +88,34 @@ GridAccelerator worldBbox
     ]
 ]
 
+GridAccelerator voxelAt: tripletCoord ifNil: block
+[
+    ^((voxels at: tripletCoord x) at: tripletCoord y) at: tripletCoord z ifNilPut: block
+]
+
 GridAccelerator voxelAt: tripletCoord
 [
-    ^((voxels at: tripletCoord x) at: tripletCoord y) at: tripletCoord z ifNilPut: [Voxel new]
+    ^((voxels at: tripletCoord x) at: tripletCoord y) at: tripletCoord z
 ]
 
 GridAccelerator canIntersect [ ^true ]
 
 GridAccelerator intersect: ray ifFailed: failed
 [
-    | currentT gridIntersect currentVoxel nextCrossingT deltaT step out |
+    | currentT gridIntersect currentVoxelPos nextCrossingT deltaT step out |
     currentT := (self worldBbox isInside: ray minp)
                         ifTrue: [ ray mint ]
                         ifFalse: [self worldBbox 
                                         intersect: ray 
                                         ifFailed: [ ^failed value]].
     gridIntersect := ray at: currentT.
-    currentVoxel := self voxelPosition: gridIntersect.
+    currentVoxelPos := self voxelPosition: gridIntersect.
+    nextCrossingT := Triplet xyz: 0.0.
     ray direction withIndexDo: [:index :dcoord |
         dcoord negated 
             ifFalse: [
-                nextCrossingT := currentT + 12.
+                nextCrossingT at: index put: currentT + 
+                    ((((self voxelMinAt: currentVoxelPos) at: index) -  gridIntersect at: index) / (ray direction at: index) ).
             ]
             ifTrue: [
             ]
