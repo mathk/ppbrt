@@ -10,6 +10,14 @@ Triplet x: anX y: anY z: anZ
     z := anZ
 ]
 
+Triplet + aNumber [
+    ^self x: self x + aNumber y: self y + aNumber z: self z + aNumber
+]
+
+Triplet - aNumber [
+    ^self x: self x - aNumber y: self y - aNumber z: self z - aNumber
+]
+
 Triplet xyz: aNum 
 [
     self := super new.

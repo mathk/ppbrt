@@ -10,8 +10,8 @@ GridAccelerator primitives: allPrimitives refineBefor: refineNeeded
     self := super primitives: allPrimitives refineBefor: refineNeeded.
     primitives do: [:each |
         | minCoordVoxel maxCoordVoxel |
-        minCoordVoxel := self voxelPosition: each worldBbox pMin.
-        maxCoordVoxel := self voxelPosition: each worldBbox pMax.
+        minCoordVoxel := self voxelPositionAt: each worldBbox pMin.
+        maxCoordVoxel := self voxelPositionAt: each worldBbox pMax.
         minCoordVoxel to: maxCoordVoxel do: [:coord |
             (self voxelAt: coord ifNil: [Voxel new]) addPrimitive: each
         ]
@@ -39,7 +39,7 @@ GridAccelerator voxelsPerUnitDist
     ]
 ]
 
-GridAccelerator voxelPosition: point
+GridAccelerator voxelPositionAt: point
 [
     | p |
     p := Triplet xyz: 0.
@@ -51,7 +51,7 @@ GridAccelerator voxelPosition: point
     ^p
 ]
 
-GridAccelerator voxelMinAt: voxelCoord
+GridAccelerator minPointAt: voxelCoord
 [
     ^self worldBbox pMin + (Vector x: (voxelCoord x - 1) * width x
                                   y: (voxelCoord y - 1) * width y
@@ -109,15 +109,17 @@ GridAccelerator intersect: ray ifFailed: failed
                                         intersect: ray 
                                         ifFailed: [ ^failed value]].
     gridIntersect := ray at: currentT.
-    currentVoxelPos := self voxelPosition: gridIntersect.
+    currentVoxelPos := self voxelPositionAt: gridIntersect.
     nextCrossingT := Triplet xyz: 0.0.
     ray direction withIndexDo: [:index :dcoord |
         dcoord negated 
             ifFalse: [
                 nextCrossingT at: index put: currentT + 
-                    ((((self voxelMinAt: currentVoxelPos) at: index) -  gridIntersect at: index) / (ray direction at: index) ).
+                    ((((self minPointAt: currentVoxelPos) at: index) - gridIntersect at: index) / (ray direction at: index)).
             ]
             ifTrue: [
+                nextCrossingT at: index put: currentT + 
+                    ((((self minPointAt: currentVoxelPos + 1) at: index) - gridIntersect at: index) / (ray direction at: index)).
             ]
     ]
 ]
