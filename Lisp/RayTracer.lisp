@@ -25,7 +25,7 @@
 	    (min (/ (+ (- b) discrt) aa)
 		 (/ (- (- b) discrt) aa)))))))
 
-(defstruct surface color)
+(defstruct surface color-red color-green color-blue)
 
 
 (defparameter *world* nil)
@@ -34,26 +34,33 @@
 
 (defun tracer (pathname &optional (res 1))
   (with-open-file (p pathname :direction :output)
-    (format p "P2 ~A ~A 255" (* res 100) (* res 100))
+    (format p "P3 ~A ~A 255" (* res 100) (* res 100))
     (let ((inc (/ res)))
       (do ((y -50 (+ y inc)))
 	  ((< (- 50 y) inc))
 	(do ((x -50 (+ x inc)))
 	    ((< (- 50 x) inc))
-	  (print (color-at x y) p))))))
+	  (multiple-value-bind (r g b)
+	      (color-at x y)
+	    (print r p)
+	    (print g p)
+	    (print b p)))))))
 
 (defun color-at (x y)
   (multiple-value-bind (xr yr zr)
       (unit-vector (- x (x eye))
 		   (- y (y eye))
 		   (- 0 (z eye)))
-    (round (* (sendray eye xr yr zr) 255))))
+    (multiple-value-bind (r g b)
+	(sendray eye xr yr zr)
+      (values (round (* r 255)) (round (* g 255)) (round (* b 255))))))
 
 (defun sendray (pt xr yr zr)
   (multiple-value-bind (s int) (first-hit pt xr yr zr)
     (if s
-	(* (lambert s int xr yr zr) (surface-color s))
-	0)))
+	(let ((l (lambert s int xr yr zr)))
+	  (values (* l (surface-color-red s)) (* l (surface-color-green s)) (* l (surface-color-blue s))))
+	(values 0 0 0))))
 
 
 
@@ -75,11 +82,13 @@
   radius center)
 
 
-(defun defsphere (x y z r c)
+(defun defsphere (x y z r cr cg cb)
   (let ((s (make-sphere
 	    :radius r
 	    :center (make-point :x x :y y :z z)
-	    :color c)))
+	    :color-red cr
+	    :color-green cg
+	    :color-blue cb)))
     (push s *world*)
     s))
 
@@ -116,12 +125,12 @@
 
 (defun ray-test (&optional (res 1))
   (setf *world* nil)
-  (defsphere 0 -300 -1200 200 .8)
-  (defsphere -80 -150 -1200 200 .7)
-  (defsphere 70 -100 -1200 200 .9)
+  (defsphere 0 -300 -1600 150 .6 .5 .8)
+  (defsphere -80 -150 -1200 100 .7 .8 .2)
+  (defsphere 70 -100 -1200 200 .9 .3 .4)
   (do ((x -2 (1+ x)))
       ((> x 2))
     (do ((z 2 (1+ z)))
 	((> z 7))
-	(defsphere (* x 200) 300 (* z -400) 40 .75)))
+	(defsphere (* x 200) 300 (* z -400) 40 .75 .56 .87)))
   (tracer (make-pathname :name "spheres.pgm") res))
