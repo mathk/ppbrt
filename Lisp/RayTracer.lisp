@@ -1,3 +1,5 @@
+(declaim (inline ray-direction-x ray-direction-y ray-direction-z ray-origin-x ray-origin-y ray-origin-z))
+
 (defstruct (point (:conc-name p))
   x y z)
 
@@ -33,6 +35,9 @@
 (defun ray-origin-z (ray)
   (pz (ray-origin ray)))
 
+(defun dot (v1 v2)
+  (+ (* (vx v1) (vx v2)) (* (vy v1) (vy v2)) (* (vz v1) (vz v2))))
+
 (defun ray-at (ray n)
   (make-point :x (+ (ray-origin-x ray) (* n (ray-direction-x ray)))
 	      :y (+ (ray-origin-y ray) (* n (ray-direction-y ray)))
@@ -62,6 +67,7 @@
 
 
 (defparameter *world* nil)
+(defparameter *light* nil)
 
 (defconstant eye (make-point :x 0 :y 0 :z 200))
 
@@ -84,11 +90,15 @@
       (sendray (make-ray :origin eye :direction (unit-vector (distance-v p eye))))
     (values (round (* r 255)) (round (* g 255)) (round (* b 255)))))
 
+;; fix epsilon value for ray send to light
 (defun sendray (ray)
   (multiple-value-bind (s int) (first-hit ray)
     (if s
-	(let ((l (lambert s int (ray-direction ray))))
-	  (values (* l (surface-color-red s)) (* l (surface-color-green s)) (* l (surface-color-blue s))))
+	(multiple-value-bind (light-s light-int) (first-hit (make-ray :origin int :direction (distance-v *light* int)))
+	  (if (not light-s)
+	      (let ((l (min 1 (+ 0.1 (lambert s int (ray-direction ray))))))
+		(values (* l (surface-color-red s)) (* l (surface-color-green s)) (* l (surface-color-blue s))))
+	      (values (* 0.1 (surface-color-red s)) (* 0.1 (surface-color-green s)) (* 0.1 (surface-color-blue s)))))
 	(values 0 0 0))))
 
 (defun first-hit (ray)
@@ -101,9 +111,12 @@
 	      (setf surface s hit h dist d))))))
     (values surface hit)))
 
-(defun lambert (s int incoming)
-  (let ((n (normal s int)))
-    (max 0 (+ (* (vx incoming) (vx n)) (* (vy incoming)  (vy n)) (* (vz incoming) (vz n))))))
+(defun lambert (s intersection incoming)
+  (let* ((n (normal s intersection))
+	(light-i (dot n (distance-v intersection *light*))))
+    (if (> 0 light-i)
+	(max 0  (* (dot n (unit-vector (distance-v *light* intersection)))  (dot n incoming)))
+	(max 0  (* (dot n (unit-vector (distance-v intersection *light*)))  (dot n incoming))))))
 
 (defstruct (sphere (:include surface))
   radius center)
@@ -147,6 +160,7 @@
 
 (defun ray-test (&optional (res 1))
   (setf *world* nil)
+  (setf *light* (make-point :x 1400 :y 500 :z -800))
   (defsphere 0 -300 -1600 150 .6 .5 .8)
   (defsphere -80 -150 -1200 100 .7 .8 .2)
   (defsphere 70 -100 -1200 200 .9 .3 .4)
