@@ -1,19 +1,54 @@
+(defstruct (point (:conc-name p))
+  x y z)
+
+(defstruct (vect (:conc-name v))
+  x y z)
+
 (defun sq (x) (* x x))
 
 (defun mag (x y z)
   (sqrt (+ (sq x) (sq y) (sq z))))
 
-(defun unit-vector (x y z)
-  (let ((d (mag x y z)))
-    (values (/ x d) (/ y d) (/ z d))))
+(defun unit-vector (v)
+  (let ((d (mag (vx v) (vy v) (vz v))))
+    (make-vect :x (/ (vx v) d) :y (/ (vy v) d) :z (/ (vz v) d))))
 
-(defstruct (point (:conc-name nil))
-  x y z)
+
+
+(defstruct ray origin direction)
+
+(defun ray-direction-x (ray)
+  (vx (ray-direction ray)))
+
+(defun ray-direction-y (ray)
+  (vy (ray-direction ray)))
+
+(defun ray-direction-z (ray)
+  (vz (ray-direction ray)))
+
+(defun ray-origin-x (ray)
+  (px (ray-origin ray)))
+
+(defun ray-origin-y (ray)
+  (py (ray-origin ray)))
+
+(defun ray-origin-z (ray)
+  (pz (ray-origin ray)))
+
+(defun ray-at (ray n)
+  (make-point :x (+ (ray-origin-x ray) (* n (ray-direction-x ray)))
+	      :y (+ (ray-origin-y ray) (* n (ray-direction-y ray)))
+	      :z (+ (ray-origin-z ray) (* n (ray-direction-z ray)))))
 
 (defun distance (p1 p2)
-  (mag (- (x p1) (x p2))
-       (- (y p1) (y p2))
-       (- (z p1) (z p2))))
+  (mag (- (px p1) (px p2))
+       (- (py p1) (py p2))
+       (- (pz p1) (pz p2))))
+
+(defun distance-v (p1 p2)
+  (make-vect :x (- (px p1) (px p2))
+	     :y (- (py p1) (py p2))
+	     :z (- (pz p1) (pz p2))))
 
 (defun minroot (a b c)
   (if (zerop a)
@@ -41,42 +76,36 @@
 	(do ((x -50 (+ x inc)))
 	    ((< (- 50 x) inc))
 	  (multiple-value-bind (r g b)
-	      (color-at x y)
+	      (color-at (make-point  :x x  :y y :z 0))
 	    (print r p)
 	    (print g p)
 	    (print b p)))))))
 
-(defun color-at (x y)
-  (multiple-value-bind (xr yr zr)
-      (unit-vector (- x (x eye))
-		   (- y (y eye))
-		   (- 0 (z eye)))
-    (multiple-value-bind (r g b)
-	(sendray eye xr yr zr)
-      (values (round (* r 255)) (round (* g 255)) (round (* b 255))))))
+(defun color-at (p)
+  (multiple-value-bind (r g b)
+      (sendray (make-ray :origin eye :direction (unit-vector (distance-v p eye))))
+    (values (round (* r 255)) (round (* g 255)) (round (* b 255)))))
 
-(defun sendray (pt xr yr zr)
-  (multiple-value-bind (s int) (first-hit pt xr yr zr)
+(defun sendray (ray)
+  (multiple-value-bind (s int) (first-hit ray)
     (if s
-	(let ((l (lambert s int xr yr zr)))
+	(let ((l (lambert s int (ray-direction ray))))
 	  (values (* l (surface-color-red s)) (* l (surface-color-green s)) (* l (surface-color-blue s))))
 	(values 0 0 0))))
 
-
-
-(defun first-hit (pt xr yr zr)
+(defun first-hit (ray)
   (let (surface hit dist)
     (dolist (s *world*)
-      (let ((h (intersect s pt xr yr zr)))
+      (let ((h (intersect s ray)))
 	(when h
-	  (let ((d (distance h pt)))
+	  (let ((d (distance h (ray-origin ray))))
 	    (when (or (null dist) (< d dist))
 	      (setf surface s hit h dist d))))))
     (values surface hit)))
 
-(defun lambert (s int xr yr zr)
-  (multiple-value-bind (xn yn zn) (normal s int)
-    (max 0 (+ (* xr xn) (* yr yn) (* zr zn)))))
+(defun lambert (s int incoming)
+  (let ((n (normal s int)))
+    (max 0 (+ (* (vx incoming) (vx n)) (* (vy incoming)  (vy n)) (* (vz incoming) (vz n))))))
 
 (defstruct (sphere (:include surface))
   radius center)
@@ -92,24 +121,22 @@
     (push s *world*)
     s))
 
-(defun intersect (s pt xr yr zr)
+(defun intersect (s ray)
   (funcall (typecase s (sphere #'sphere-intersect))
-	   s pt xr yr zr))
+	   s ray))
 
-(defun sphere-intersect (s pt xr yr zr)
+(defun sphere-intersect (s ray)
   (let* ((c (sphere-center s))
-	 (n (minroot (+ (sq xr) (sq yr) (sq zr))
-		     (* 2 (+ (* (- (x pt) (x c)) xr)
-			     (* (- (y pt) (y c)) yr)
-			     (* (- (z pt) (z c)) zr)))
-		     (+ (sq (- (x pt) (x c)))
-			(sq (- (y pt) (y c)))
-			(sq (- (z pt) (z c)))
+	 (n (minroot (+ (sq (ray-direction-x ray)) (sq (ray-direction-y ray)) (sq (ray-direction-z ray)))
+		     (* 2 (+ (* (- (ray-origin-x ray) (px c)) (ray-direction-x ray))
+			     (* (- (ray-origin-y ray) (py c)) (ray-direction-y ray))
+			     (* (- (ray-origin-z ray) (pz c)) (ray-direction-z ray))))
+		     (+ (sq (- (ray-origin-x ray) (px c)))
+			(sq (- (ray-origin-y ray) (py c)))
+			(sq (- (ray-origin-z ray) (pz c)))
 			(- (sq (sphere-radius s)))))))
     (if n
-	(make-point :x (+ (x pt) (* n xr))
-		    :y (+ (y pt) (* n yr))
-		    :z (+ (z pt) (* n zr))))))
+	(ray-at ray n))))
 
 
 (defun normal (s pt)
@@ -117,10 +144,7 @@
 	   s pt))
 
 (defun sphere-normal (s pt)
-  (let ((c (sphere-center s)))
-    (unit-vector (- (x c) (x pt))
-		 (- (y c) (y pt))
-		 (- (z c) (z pt)))))
+    (unit-vector (distance-v (sphere-center s) pt)))
 
 
 (defun ray-test (&optional (res 1))
