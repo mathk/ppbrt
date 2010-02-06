@@ -4,6 +4,8 @@
 (defstruct (vect (:conc-name v))
   x y z)
 
+(defstruct ray origin direction)
+
 (defun sq (x) (* x x))
 
 (defun mag (x y z)
@@ -12,10 +14,6 @@
 (defun unit-vector (v)
   (let ((d (mag (vx v) (vy v) (vz v))))
     (make-vect :x (/ (vx v) d) :y (/ (vy v) d) :z (/ (vz v) d))))
-
-
-
-(defstruct ray origin direction)
 
 (defun ray-direction-x (ray)
   (vx (ray-direction ray)))
