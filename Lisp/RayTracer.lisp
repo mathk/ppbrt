@@ -60,8 +60,9 @@
 	(unless (minusp disc)
 	  (let ((discrt (sqrt disc))
 		(aa (* a 2)))
-	    (min (/ (+ (- b) discrt) aa)
-		 (/ (- (- b) discrt) aa)))))))
+	    (let ((first (/ (+ (- b) discrt) aa))
+		  (second (/ (- (- b) discrt) aa)))
+	      (values (min first second) (max first second))))))))
 
 (defstruct surface color-red color-green color-blue)
 
@@ -90,7 +91,6 @@
       (sendray (make-ray :origin eye :direction (unit-vector (distance-v p eye))))
     (values (round (* r 255)) (round (* g 255)) (round (* b 255)))))
 
-;; fix epsilon value for ray send to light
 (defun sendray (ray)
   (multiple-value-bind (s int) (first-hit ray)
     (if s
@@ -107,9 +107,9 @@
       (let ((h (intersect s ray)))
 	(when h
 	  (let ((d (distance h (ray-origin ray))))
-	    (when (or (null dist) (< d dist))
-	      (setf surface s hit h dist d))))))
-    (values surface hit)))
+	      (when (or (null dist) (< d dist))
+		(setf surface s hit h dist d))))))
+      (values surface hit)))
 
 (defun lambert (s intersection incoming)
   (let* ((n (normal s intersection))
@@ -137,17 +137,23 @@
 	   s ray))
 
 (defun sphere-intersect (s ray)
-  (let* ((c (sphere-center s))
-	 (n (minroot (+ (sq (ray-direction-x ray)) (sq (ray-direction-y ray)) (sq (ray-direction-z ray)))
+  (let* ((c (sphere-center s)))
+    (multiple-value-bind (first second) 
+	(minroot (+ 
+		  (sq (ray-direction-x ray)) 
+		  (sq (ray-direction-y ray)) 
+		  (sq (ray-direction-z ray)))
 		     (* 2 (+ (* (- (ray-origin-x ray) (px c)) (ray-direction-x ray))
 			     (* (- (ray-origin-y ray) (py c)) (ray-direction-y ray))
 			     (* (- (ray-origin-z ray) (pz c)) (ray-direction-z ray))))
 		     (+ (sq (- (ray-origin-x ray) (px c)))
 			(sq (- (ray-origin-y ray) (py c)))
 			(sq (- (ray-origin-z ray) (pz c)))
-			(- (sq (sphere-radius s)))))))
-    (if n
-	(ray-at ray n))))
+			(- (sq (sphere-radius s)))))
+      (if (and first (> first 0.001))
+	  (ray-at ray first)
+	  (if (and second (> second 0.001))
+	      (ray-at ray second))))))
 
 
 (defun normal (s pt)
@@ -160,7 +166,7 @@
 
 (defun ray-test (&optional (res 1))
   (setf *world* nil)
-  (setf *light* (make-point :x 1400 :y 500 :z -800))
+  (setf *light* (make-point :x 0 :y 500 :z -800))
   (defsphere 0 -300 -1600 150 .6 .5 .8)
   (defsphere -80 -150 -1200 100 .7 .8 .2)
   (defsphere 70 -100 -1200 200 .9 .3 .4)
