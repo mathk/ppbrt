@@ -1,57 +1,6 @@
-(declaim (inline ray-direction-x ray-direction-y ray-direction-z ray-origin-x ray-origin-y ray-origin-z))
-
-(defstruct (point (:conc-name p))
-  x y z)
-
-(defstruct (vect (:conc-name v))
-  x y z)
-
-(defstruct ray origin direction)
-
-(defun sq (x) (* x x))
-
-(defun mag (x y z)
-  (sqrt (+ (sq x) (sq y) (sq z))))
-
-(defun unit-vector (v)
-  (let ((d (mag (vx v) (vy v) (vz v))))
-    (make-vect :x (/ (vx v) d) :y (/ (vy v) d) :z (/ (vz v) d))))
-
-(defun ray-direction-x (ray)
-  (vx (ray-direction ray)))
-
-(defun ray-direction-y (ray)
-  (vy (ray-direction ray)))
-
-(defun ray-direction-z (ray)
-  (vz (ray-direction ray)))
-
-(defun ray-origin-x (ray)
-  (px (ray-origin ray)))
-
-(defun ray-origin-y (ray)
-  (py (ray-origin ray)))
-
-(defun ray-origin-z (ray)
-  (pz (ray-origin ray)))
-
-(defun dot (v1 v2)
-  (+ (* (vx v1) (vx v2)) (* (vy v1) (vy v2)) (* (vz v1) (vz v2))))
-
-(defun ray-at (ray n)
-  (make-point :x (+ (ray-origin-x ray) (* n (ray-direction-x ray)))
-	      :y (+ (ray-origin-y ray) (* n (ray-direction-y ray)))
-	      :z (+ (ray-origin-z ray) (* n (ray-direction-z ray)))))
-
-(defun distance (p1 p2)
-  (mag (- (px p1) (px p2))
-       (- (py p1) (py p2))
-       (- (pz p1) (pz p2))))
-
-(defun distance-v (p1 p2)
-  (make-vect :x (- (px p1) (px p2))
-	     :y (- (py p1) (py p2))
-	     :z (- (pz p1) (pz p2))))
+;;(require 'geometry)
+(load "./geometry.lisp")
+(use-package 'geometry)
 
 (defun minroot (a b c)
   (if (zerop a)
@@ -168,6 +117,7 @@
   (setf *world* nil)
   (setf *light* (make-point :x 0 :y 500 :z -800))
   (defsphere 0 -300 -1600 150 .6 .5 .8)
+  ;;(defsphere 0 500 -800 10 1 1 1)
   (defsphere -80 -150 -1200 100 .7 .8 .2)
   (defsphere 70 -100 -1200 200 .9 .3 .4)
   (do ((x -2 (1+ x)))
