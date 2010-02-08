@@ -67,8 +67,8 @@
   (let* ((n (normal s intersection))
 	(light-i (dot n (distance-v intersection *light*))))
     (if (> 0 light-i)
-	(max 0  (* (dot n (unit-vector (distance-v *light* intersection)))  (dot n incoming)))
-	(max 0  (* (dot n (unit-vector (distance-v intersection *light*)))  (dot n incoming))))))
+	(max 0  (dot n (unit-vector (distance-v *light* intersection))))
+	(max 0  (dot n (unit-vector (distance-v intersection *light*)))))))
 
 (defstruct (sphere (:include surface))
   radius center)
@@ -158,8 +158,8 @@
 
 (defun ray-test (&optional (res 1))
   (setf *world* nil)
-  (setf *light* (make-point :x 0 :y 0 :z -900))
-  (defsphere 0 -300 -1600 150 .6 .5 .8)
+  (setf *light* (make-point :x -80 :y -300 :z -600))
+;;  (defsphere 0 -300 -1600 150 .6 .5 .8)
 ;  (defsphere -80 200 -900 50 .6 .5 .8)
   ;;(defsphere 0 500 -800 10 1 1 1)
   (defsphere -80 -150 -1200 100 .7 .8 .2)
