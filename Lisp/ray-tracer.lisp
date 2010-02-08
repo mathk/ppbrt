@@ -1,5 +1,4 @@
-;;(require 'geometry)
-(load "./geometry.lisp")
+(load #P"./geometry.lisp")
 (use-package 'geometry)
 
 (defun minroot (a b c)
@@ -19,7 +18,7 @@
 (defparameter *world* nil)
 (defparameter *light* nil)
 
-(defconstant eye (make-point :x 0 :y 0 :z 200))
+(defparameter eye (make-point :x 0 :y 0 :z 200))
 
 (defun tracer (pathname &optional (res 1))
   (with-open-file (p pathname :direction :output)
@@ -54,7 +53,7 @@
   (let (surface hit dist)
     (dolist (s *world*)
       (let ((h (intersect s ray)))
-	(when h
+                              	(when h
 	  (let ((d (distance h (ray-origin ray))))
 	      (when (or (null dist) (< d dist))
 		(setf surface s hit h dist d))))))
@@ -70,6 +69,19 @@
 (defstruct (sphere (:include surface))
   radius center)
 
+(defstruct (triangle (:include surface))
+  p1 p2 p3)
+
+(defun deftriangle (px1 py1 pz1 px2 py2 pz2 px3 py3 pz3 cr cg cb)
+  (let ((tr (make-triangle
+	    :p1 (make-point :x px1 :y py1 :z pz1)
+	    :p2 (make-point :x px2 :y py2 :z pz2)
+	    :p3 (make-point :x px3 :y py3 :z pz3)
+	    :color-red cr
+	    :color-green cg
+	    :color-blue cb)))
+    (push tr *world*)
+    tr))
 
 (defun defsphere (x y z r cr cg cb)
   (let ((s (make-sphere
@@ -82,14 +94,16 @@
     s))
 
 (defun intersect (s ray)
-  (funcall (typecase s (sphere #'sphere-intersect))
+  (funcall (typecase s 
+	     (sphere #'sphere-intersect)
+	     (triangle #'triangle-intersect))
 	   s ray))
 
 (defun sphere-intersect (s ray)
   (let* ((c (sphere-center s)))
     (multiple-value-bind (first second) 
 	(minroot (+ 
-		  (sq (ray-direction-x ray)) 
+ 		  (sq (ray-direction-x ray)) 
 		  (sq (ray-direction-y ray)) 
 		  (sq (ray-direction-z ray)))
 		     (* 2 (+ (* (- (ray-origin-x ray) (px c)) (ray-direction-x ray))
@@ -104,19 +118,45 @@
 	  (if (and second (> second 0.001))
 	      (ray-at ray second))))))
 
+(defun triangle-intersect (s ray)
+  (let* ((e1 (distance-v (triangle-p2 s) (triangle-p1 s)))
+	 (e2 (distance-v (triangle-p3 s) (triangle-p1 s)))
+	 (s1 (cross (ray-direction ray) e2))
+	 (divisor (dot s1 e1)))
+    (if (/= divisor 0)
+	(let* ((d (distance-v (ray-origin ray) (triangle-p1 s)))
+	       (b1 (/ (dot d s1) divisor)))
+	  (if (and (> b1 0) (< b1 1))
+	      (let* ((s2 (cross d e1))
+		     (b2 (/ (dot (ray-direction ray) s2) divisor)))
+		(if (and (> b2 0) (< (+ b1 b2) 1))
+		    (let ((thit (/ (dot e2 s2) divisor)))
+		      (if (> thit 0.001)
+			  (ray-at ray thit))))))))))
+
+
+
+
 
 (defun normal (s pt)
-  (funcall (typecase s (sphere #'sphere-normal))
+  (funcall (typecase s 
+	     (sphere #'sphere-normal)
+	     (triangle #'triangle-normal))
 	   s pt))
 
 (defun sphere-normal (s pt)
-    (unit-vector (distance-v (sphere-center s) pt)))
+  (unit-vector (distance-v (sphere-center s) pt)))
+
+(defun triangle-normal (s pt)
+  (unit-vector (cross (distance-v (triangle-p1 s) (triangle-p2 s))
+		      (distance-v (triangle-p3 s) (triangle-p2 s)))))
 
 
 (defun ray-test (&optional (res 1))
   (setf *world* nil)
-  (setf *light* (make-point :x 0 :y 500 :z -800))
+  (setf *light* (make-point :x 0 :y 30 :z -800))
   (defsphere 0 -300 -1600 150 .6 .5 .8)
+;  (defsphere -80 200 -900 50 .6 .5 .8)
   ;;(defsphere 0 500 -800 10 1 1 1)
   (defsphere -80 -150 -1200 100 .7 .8 .2)
   (defsphere 70 -100 -1200 200 .9 .3 .4)
@@ -125,4 +165,6 @@
     (do ((z 2 (1+ z)))
 	((> z 7))
 	(defsphere (* x 200) 300 (* z -400) 40 .75 .56 .87)))
+  (deftriangle -800 400 -900 -800 400 -4900 1000 400 -4900 1 1 1)
+  (deftriangle -800 400 -900 1000 400 -4900 1000 400 -900 1 1 1)
   (tracer (make-pathname :name "spheres.pgm") res))

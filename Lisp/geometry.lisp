@@ -18,7 +18,8 @@
 	   "VX" "VY" "VZ"
 	   "MAKE-POINT"
 	   "MAKE-VECT"
-	   "MAKE-RAY"))
+	   "MAKE-RAY"
+	   "CROSS"))
 
 (in-package geometry)
 
@@ -78,3 +79,8 @@
   (make-vect :x (- (px p1) (px p2))
 	     :y (- (py p1) (py p2))
 	     :z (- (pz p1) (pz p2))))
+
+(defun cross (v1 v2)
+  (make-vect :x (- (* (vy v1) (vz v2)) (* (vz v1) (vy v2)))
+	       :y (- (* (vz v1) (vx v2)) (* (vx v1) (vz v2)))
+	       :z (- (* (vx v1) (vy v2)) (* (vy v1) (vx v2)))))
