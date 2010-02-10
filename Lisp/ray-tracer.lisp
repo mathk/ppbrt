@@ -1,5 +1,12 @@
-(load #P"./geometry.lisp")
-(use-package 'geometry)
+;(require :asdf)
+;(load #P"./geometry.lisp")
+;(use-package 'geometry)
+
+(defpackage :tracer
+  (:use :common-lisp :geometry)
+  (:export :ray-test))
+
+(in-package tracer)
 
 (defun minroot (a b c)
   (if (zerop a)

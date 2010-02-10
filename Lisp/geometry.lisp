@@ -31,7 +31,7 @@
 (defstruct (vect (:conc-name v))
   x y z)
 
-(defstruct ray origin direction)
+(defstruct ray origin direction mint maxt)
 
 
 (defun ray-direction-x (ray)
